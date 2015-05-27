@@ -11,7 +11,7 @@ import java.time.LocalDate;
  *
  * @author will
  */
-public class Usuario 
+public class Usuario implements Comparable<Usuario>
 {
     private String nombre;
     private String cedula;
@@ -20,6 +20,8 @@ public class Usuario
     private LocalDate fechaNacimiento;
     private String nombreUsuario;
     private String password;
+    
+    
 
     /**
      * @return the nombre
@@ -117,5 +119,15 @@ public class Usuario
      */
     public void setPassword(String password) {
         this.password = password;
+    }
+    
+    public boolean passwordValida(String pPassword)
+    {
+        return password.equals(pPassword);
+    }
+
+    @Override
+    public int compareTo(Usuario o) {
+        return nombreUsuario.compareTo(o.nombreUsuario);
     }
 }

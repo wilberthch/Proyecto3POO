@@ -8,6 +8,7 @@ package Modelo.Facturacion;
 import java.time.LocalDateTime;
 import java.util.LinkedList;
 import Modelo.Productos.*;
+import Modelo.Usuarios.Cajero;
 
 /**
  *
@@ -19,13 +20,15 @@ public class Factura
     private int numFactura;
     private LocalDateTime fecha;
     private LinkedList<ObjetoVendible> items;
+    private Cajero cajero;
     
-    public Factura()
+    public Factura(Cajero pCajero)
     {
         contadorFacturas++;
         numFactura = contadorFacturas;
         fecha = LocalDateTime.now();
         items = new LinkedList<>();
+        cajero = pCajero;
     }
     
     /**

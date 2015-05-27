@@ -20,6 +20,14 @@ public class ProductoAgrandable extends Producto implements iAgrandable {
     //la cantidad que se resta o aumenta al precio del producto cuando se agranda o reduce
     private double cantidadOperable;
     
+    public ProductoAgrandable(ProductoAgrandable pProducto)
+    {
+        super((Producto)pProducto);
+        MaxAgrandados = pProducto.getMaxAgrandados();
+        contadorAgrandados = 0;
+        cantidadOperable = precio * porcentajePrecioAgrandado / 100;
+    }
+    
     public ProductoAgrandable(int pMaxAgrandados)
     {
         MaxAgrandados = MaxAgrandados;

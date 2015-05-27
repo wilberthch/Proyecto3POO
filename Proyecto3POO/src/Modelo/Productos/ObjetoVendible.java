@@ -9,7 +9,7 @@ package Modelo.Productos;
  *
  * @author will
  */
-public class ObjetoVendible {
+public class ObjetoVendible implements Comparable<ObjetoVendible> {
     
     protected String nombre;
     protected double precio;
@@ -57,6 +57,13 @@ public class ObjetoVendible {
      */
     public void setDescuento(double descuento) {
         this.descuento = descuento;
+    }
+
+    @Override
+    public int compareTo(ObjetoVendible o) {
+        
+        return nombre.compareTo(o.getNombre());
+        
     }
     
 }

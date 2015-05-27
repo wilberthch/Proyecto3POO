@@ -13,7 +13,19 @@ public class Producto extends ObjetoVendible
 {
     
     protected String rutaImagen;
+    
+    public Producto()
+    {
+        
+    }
 
+    public Producto(Producto pProducto)
+    {
+        nombre = pProducto.getNombre();
+        precio = pProducto.getPrecio();
+        descuento = pProducto.getDescuento();
+        rutaImagen = pProducto.getRutaImagen();
+    }
 
     /**
      * @return the rutaImagen
