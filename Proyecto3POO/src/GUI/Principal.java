@@ -66,7 +66,6 @@ public class Principal extends javax.swing.JFrame {
         Persistencia.getInstance().guardarObjecto(res);
         res = Persistencia.getInstance().restaurarObjecto(Restaurante.class);
         
-        System.out.println(res.getUsuarioByUserName("Wiiiiiiiilberth").getCedula());
     }//GEN-LAST:event_jButton1ActionPerformed
 
     /**

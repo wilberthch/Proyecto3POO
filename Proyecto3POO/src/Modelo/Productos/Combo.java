@@ -13,7 +13,7 @@ import java.util.LinkedList;
  */
 public class Combo extends ObjetoVendible implements iAgrandable {
     
-    LinkedList<Producto> productos;
+    private LinkedList<Producto> productos;
     
     
     private static final double porcentajeDescuentoCombo = 0.85;
@@ -26,12 +26,12 @@ public class Combo extends ObjetoVendible implements iAgrandable {
     
     public void agregarProducto(Producto pProducto)
     {
-        productos.add(pProducto);
+        getProductos().add(pProducto);
     }
     
     public void removerProducto(Producto pProducto)
     {
-        productos.remove(pProducto);
+        getProductos().remove(pProducto);
     }
     
     @Override
@@ -41,7 +41,7 @@ public class Combo extends ObjetoVendible implements iAgrandable {
         
         double precioBruto = 0.0;
         
-        for(Producto producto : productos)
+        for(Producto producto : getProductos())
         {
             precioBruto += producto.getPrecio();
         }
@@ -59,7 +59,7 @@ public class Combo extends ObjetoVendible implements iAgrandable {
 
     @Override
     public void agrandar() throws Exception {
-        for(Producto producto : productos)
+        for(Producto producto : getProductos())
         {
             if( producto instanceof ProductoAgrandable)
             {
@@ -71,7 +71,7 @@ public class Combo extends ObjetoVendible implements iAgrandable {
     @Override
     public void reducir() throws Exception {
         
-        for(Producto producto : productos)
+        for(Producto producto : getProductos())
         {
             if( producto instanceof ProductoAgrandable)
             {
@@ -79,6 +79,20 @@ public class Combo extends ObjetoVendible implements iAgrandable {
             }
         }
         
+    }
+
+    /**
+     * @return the productos
+     */
+    public LinkedList<Producto> getProductos() {
+        return productos;
+    }
+
+    /**
+     * @param productos the productos to set
+     */
+    public void setProductos(LinkedList<Producto> productos) {
+        this.productos = productos;
     }
 
     

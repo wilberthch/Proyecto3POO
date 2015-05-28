@@ -5,10 +5,10 @@
  */
 package Modelo.Facturacion;
 
+import Modelo.Productos.ObjetoVendible;
 import java.time.LocalDateTime;
-import java.util.LinkedList;
-import Modelo.Productos.*;
 import Modelo.Usuarios.Cajero;
+import java.util.LinkedList;
 
 /**
  *
@@ -17,10 +17,11 @@ import Modelo.Usuarios.Cajero;
 public class Factura 
 {
     private static int contadorFacturas = 0;
-    private int numFactura;
-    private LocalDateTime fecha;
+    private final int numFactura;
+    private final LocalDateTime fecha;
     private LinkedList<ObjetoVendible> items;
-    private Cajero cajero;
+    private final Cajero cajero;
+    private EstadoFactura estado;
     
     public Factura(Cajero pCajero)
     {
@@ -29,6 +30,17 @@ public class Factura
         fecha = LocalDateTime.now();
         items = new LinkedList<>();
         cajero = pCajero;
+        estado = EstadoFactura.CREADA;
+    }
+    
+    public Factura(Cajero pCajero, LinkedList<ObjetoVendible> pItems)
+    {
+        contadorFacturas++;
+        numFactura = contadorFacturas;
+        fecha = LocalDateTime.now();
+        items = pItems;
+        cajero = pCajero;
+        estado = EstadoFactura.CREADA;
     }
     
     /**
@@ -47,25 +59,50 @@ public class Factura
     
     public void agregarObjeto(ObjetoVendible pItem)
     {
-        items.add(pItem);
+        getItems().add(pItem);
     }
     
     public void removerObjeto(ObjetoVendible pItem)
     {
-        items.remove(pItem);
+        getItems().remove(pItem);
     }
     
     public double getTotal()
     {
         double total = 0.0;
         
-        for(ObjetoVendible objeto : items)
+        for(ObjetoVendible objeto : getItems())
         {
             total += objeto.getPrecio();
         }
         
         return total;
     }
+    
+    public void setFacturaCancelada()
+    {
+        estado = EstadoFactura.CANCELADA;
+    }
+    
+    public void setFacturaPagada()
+    {
+        estado = EstadoFactura.PAGADA;
+    }
+
+    /**
+     * @return the items
+     */
+    public LinkedList<ObjetoVendible> getItems() {
+        return items;
+    }
+
+    /**
+     * @param items the items to set
+     */
+    public void setItems(LinkedList<ObjetoVendible> items) {
+        this.items = items;
+    }
+    
 
     
     

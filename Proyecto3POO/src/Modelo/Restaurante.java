@@ -6,9 +6,11 @@
 package Modelo;
 
 import Modelo.Facturacion.Factura;
+import Modelo.Facturacion.iFacturador;
 import Modelo.Productos.Combo;
 import Modelo.Productos.Producto;
 import Modelo.Usuarios.Administrador;
+import Modelo.Usuarios.Cajero;
 import Modelo.Usuarios.Usuario;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -17,12 +19,13 @@ import java.util.LinkedList;
  *
  * @author will
  */
-public class Restaurante {
+public class Restaurante implements iFacturador
+{
     
-    private LinkedList<Usuario> usuarios;
-    private LinkedList<Producto> productos;
-    private LinkedList<Combo> combos;
-    private LinkedList<Factura> facturas;
+    private final LinkedList<Usuario> usuarios;
+    private final LinkedList<Producto> productos;
+    private final LinkedList<Combo> combos;
+    private final LinkedList<Factura> facturas;
     
     public Restaurante()
     {
@@ -30,10 +33,6 @@ public class Restaurante {
         productos = new LinkedList<>();
         combos = new LinkedList<>();
         facturas = new LinkedList<>();
-        Administrador admin = new Administrador(this);
-        admin.setCedula("fadad");
-        admin.setNombreUsuario("Wiiiiiiiilberth");
-        usuarios.add((Usuario)admin);
     }
     
     public Usuario getUsuarioByUserName(String pNombreUsuario) throws NullPointerException
@@ -60,8 +59,10 @@ public class Restaurante {
     
     public LinkedList<Usuario> getAllUsuarios()
     {
-        Collections.sort(usuarios);
-        return usuarios;
+        LinkedList<Usuario> tempUsuarios = new LinkedList<>(usuarios);
+        
+        Collections.sort(tempUsuarios);
+        return tempUsuarios;
     }
     
     public void agregarUsuario(Usuario pUsuario)
@@ -76,9 +77,31 @@ public class Restaurante {
     
     public LinkedList<Producto> getAllProductos()
     {
-        Collections.sort(productos);
+        LinkedList<Producto> tempProductos = new LinkedList<>(productos);
         
-        return productos;
+        Collections.sort(tempProductos);
+        
+        return tempProductos;
+    }
+    
+    public Producto getProductoPorNombre(String pNombre) throws NullPointerException
+    {
+        Producto res = null;
+        for(Producto producto : productos)
+        {
+            if(pNombre.equals(producto.getNombre()))
+            {
+                res = producto;
+                break;
+            }
+        }
+        
+        if(res == null)
+        {
+            throw new NullPointerException("Producto no encontrado");
+        }
+        
+        return res;
     }
     
     public void agregarProducto(Producto pProducto)
@@ -93,9 +116,27 @@ public class Restaurante {
     
     public LinkedList<Combo> getAllCombos()
     {
-        
-        Collections.sort(combos);
-        return combos;
+        LinkedList<Combo> tempCombos = new LinkedList<>(combos);
+        Collections.sort(tempCombos);
+        return tempCombos;
+    }
+    
+    public Combo getComboPorNombre(String pNombre) throws NullPointerException
+    {
+        Combo res = null;
+        for(Combo combo : combos)
+        {
+            if(pNombre.equals(combo.getNombre()))
+            {
+                res = combo;
+                break;
+            }
+        }
+        if(res == null)
+        {
+            throw new NullPointerException("Combo no encontrado");
+        }
+        return res;
     }
     
     public void agregarCombo(Combo pCombo)
@@ -107,6 +148,46 @@ public class Restaurante {
     {
         combos.remove(pCombo);
     }
+    
+    public LinkedList<Factura> getAllFacturas()
+    {
+        return facturas;
+    }
+    
+    @Override
+    public Factura getFacturaPorId(int pId) throws NullPointerException {
+        Factura res = null;
+        
+        for(Factura factura : facturas)
+        {
+            if(pId == factura.getNumFactura())
+            {
+                res = factura;
+                break;
+            }
+        }
+        if(res == null)
+        {
+            throw new NullPointerException("Factura no encontrada");
+        }
+        
+        return res;
+        
+    }
+
+    @Override
+    public void agregarFactura(Factura pFactura) {
+        facturas.add(pFactura);
+    }
+
+    @Override
+    public void removerFactura(Factura pFactura) {
+        facturas.remove(pFactura);
+    }
+
+    
+
+    
     
     
     
