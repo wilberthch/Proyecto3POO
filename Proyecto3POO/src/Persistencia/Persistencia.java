@@ -17,8 +17,8 @@ import java.io.FileOutputStream;
 public class Persistencia 
 {
     private static final String fileName = "persistencia.json";
-    private static FileOutputStream fileIn;
-    FileInputStream fileOut;
+    private static FileOutputStream fileOut;
+    FileInputStream fileIn;
     private static Persistencia _instance;
     JsonWriter writer;
     JsonReader reader;
@@ -27,11 +27,11 @@ public class Persistencia
     {
         try
         {
-            fileIn = new FileOutputStream(fileName);
-            writer = new JsonWriter(fileIn);
+            fileOut = new FileOutputStream(fileName);
+            writer = new JsonWriter(fileOut);
             
-            fileOut = new FileInputStream(fileName);
-            reader = new JsonReader(fileOut);
+            fileIn = new FileInputStream(fileName);
+            reader = new JsonReader(fileIn);
         }
         catch(Exception ex)
         {
@@ -50,7 +50,7 @@ public class Persistencia
     
     public void guardarObjecto(Object pObjeto)
     {
-        writer = new JsonWriter(fileIn);
+        writer = new JsonWriter(fileOut);
         writer.write(pObjeto);
     }
     

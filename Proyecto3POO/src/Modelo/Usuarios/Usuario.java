@@ -123,6 +123,8 @@ public class Usuario implements Comparable<Usuario>
     
     public boolean passwordValida(String pPassword)
     {
+        System.out.println(pPassword);
+        System.out.println(password);
         return password.equals(pPassword);
     }
 

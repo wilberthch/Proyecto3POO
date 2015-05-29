@@ -12,6 +12,7 @@ import Modelo.Productos.Producto;
 import Modelo.Usuarios.Administrador;
 import Modelo.Usuarios.Cajero;
 import Modelo.Usuarios.Usuario;
+import java.time.LocalDate;
 import java.util.Collections;
 import java.util.LinkedList;
 
@@ -33,6 +34,19 @@ public class Restaurante implements iFacturador
         productos = new LinkedList<>();
         combos = new LinkedList<>();
         facturas = new LinkedList<>();
+        
+        Usuario usuario = new Administrador(this);
+        usuario.setNombre("Master");
+        usuario.setFechaNacimiento(LocalDate.now());
+        usuario.setCedula("127.0.0.1");
+        usuario.setSexo('M');
+        usuario.setTelefono("127.0.0.1");
+        usuario.setNombreUsuario("admin");
+        usuario.setPassword("admin");
+        
+        usuarios.add(usuario);
+        
+        
     }
     
     public Usuario getUsuarioByUserName(String pNombreUsuario) throws NullPointerException
