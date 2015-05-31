@@ -56,6 +56,7 @@ public class Login extends javax.swing.JFrame {
         btn_login = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("AdRes [Login]");
 
         jLabel1.setText("Usuario");
 

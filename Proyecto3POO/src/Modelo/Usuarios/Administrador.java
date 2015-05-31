@@ -26,8 +26,24 @@ public class Administrador extends Usuario
         restaurante = pRestaurante;
     }
     
+    public Administrador()
+    {
+        
+    }
+    
+    public LinkedList<Usuario> getAllUsuarios()
+    {
+        return restaurante.getAllUsuarios();
+    }
+    
+    public Usuario getUsuarioByUserName(String pNombreUsuario)
+    {
+        return restaurante.getUsuarioByUserName(pNombreUsuario);
+    }
+    
     public void guardarUsuario(Usuario pUsuario) throws NullPointerException
     {
+        
         String nombreUsuario;
         String password;
         String nombre;
@@ -91,9 +107,22 @@ public class Administrador extends Usuario
         
     }
     
-    public void removerUsuario(Usuario pUsuario)
+    public void removerUsuario(String pNombreUsuario)
     {
-        restaurante.removerUsuario(pUsuario);
+        Usuario usuario = restaurante.getUsuarioByUserName(pNombreUsuario);
+        
+        restaurante.removerUsuario(usuario);
+    }
+    
+    
+    public LinkedList<Producto> getAllProductos()
+    {
+        return restaurante.getAllProductos();
+    }
+    
+    public Producto getProductoPorNombre(String pNombreProducto) throws NullPointerException
+    {
+        return restaurante.getProductoPorNombre(pNombreProducto);
     }
     
     public void guardarProducto(Producto pProducto) throws NullPointerException
@@ -146,6 +175,17 @@ public class Administrador extends Usuario
         restaurante.removerProducto(pProducto);
     }
     
+    
+    public LinkedList<Combo> getAllCombos()
+    {
+        return restaurante.getAllCombos();
+    }
+    
+    public Combo getComboPorNombre(String pNombreCombo) throws NullPointerException
+    {
+        return restaurante.getComboPorNombre(pNombreCombo);
+    }
+    
     public void guardarCombo(Combo pCombo) throws NullPointerException
     {
         double descuento;
@@ -184,6 +224,13 @@ public class Administrador extends Usuario
     public void removerCombo(Combo pCombo)
     {
         restaurante.removerCombo(pCombo);
+    }
+
+    /**
+     * @param restaurante the restaurante to set
+     */
+    public void setRestaurante(Restaurante restaurante) {
+        this.restaurante = restaurante;
     }
     
     

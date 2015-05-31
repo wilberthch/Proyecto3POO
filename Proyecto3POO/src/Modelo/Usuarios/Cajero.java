@@ -23,6 +23,10 @@ public class Cajero extends Usuario
     {
         restaurante = pRestaurante;
     }
+    public Cajero()
+    {
+        
+    }
     
     public void guardarFactura(Factura pFactura) throws NullPointerException
     {
