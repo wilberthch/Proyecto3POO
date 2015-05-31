@@ -6,6 +6,7 @@
 package GUI;
 
 import Modelo.Productos.Producto;
+import Modelo.Restaurante;
 import Modelo.Usuarios.Administrador;
 import Modelo.Usuarios.Cajero;
 import Modelo.Usuarios.Usuario;
@@ -13,12 +14,20 @@ import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.scene.shape.Shape;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
@@ -693,7 +702,13 @@ public class AdministracionRestaurante extends javax.swing.JFrame {
         if(opcion == JFileChooser.APPROVE_OPTION)
         {
             File file = fileChooser.getSelectedFile();
+            Path filePath = Paths.get(file.getPath());
+            Path newImagePath = Paths.get(Restaurante.IMAGES_PATH + file.getName());
+            System.out.println(filePath);
+            
+           
             try {
+                Files.copy(filePath, newImagePath, REPLACE_EXISTING);
                 cargarImagenALabel(lbl_ProductoImagen, file);
             } catch (IOException ex) {
                 Logger.getLogger(AdministracionRestaurante.class.getName()).log(Level.SEVERE, null, ex);
