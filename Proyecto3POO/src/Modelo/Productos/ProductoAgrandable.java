@@ -10,7 +10,7 @@ package Modelo.Productos;
  * @author will
  */
 public class ProductoAgrandable extends Producto implements iAgrandable {
-    
+
     //cantidad de veces que se ha agrandado el producto
     private int contadorAgrandados;
     //cantidad máxima en la que se puede agrandar un producto
@@ -19,7 +19,7 @@ public class ProductoAgrandable extends Producto implements iAgrandable {
     private static final double porcentajePrecioAgrandado = 10;
     //la cantidad que se resta o aumenta al precio del producto cuando se agranda o reduce
     private double cantidadOperable;
-    
+
     public ProductoAgrandable(ProductoAgrandable pProducto)
     {
         super((Producto)pProducto);
@@ -27,10 +27,12 @@ public class ProductoAgrandable extends Producto implements iAgrandable {
         contadorAgrandados = 0;
         cantidadOperable = precio * porcentajePrecioAgrandado / 100;
     }
-    
+
     public ProductoAgrandable(int pMaxAgrandados)
     {
+
         MaxAgrandados = pMaxAgrandados;
+
         contadorAgrandados = 0;
         cantidadOperable = precio * porcentajePrecioAgrandado / 100;
     }
@@ -41,7 +43,7 @@ public class ProductoAgrandable extends Producto implements iAgrandable {
         {
             throw new Exception("Máximo de agrandamientos alcanzado");
         }
-        
+
         precio += cantidadOperable;
     }
 
@@ -51,10 +53,10 @@ public class ProductoAgrandable extends Producto implements iAgrandable {
         {
             throw new Exception("cantidad minima de reducciones alcanzada");
         }
-        
+
         precio -= cantidadOperable;
     }
-    
+
     /**
      * @return the MaxAgrandados
      */
@@ -68,7 +70,7 @@ public class ProductoAgrandable extends Producto implements iAgrandable {
     public void setMaxAgrandados(int MaxAgrandados) {
         this.MaxAgrandados = MaxAgrandados;
     }
-    
+
 }
 
-    
+

@@ -17,33 +17,33 @@ import java.util.LinkedList;
  *
  * @author will
  */
-public class Administrador extends Usuario 
+public class Administrador extends Usuario
 {
     private Restaurante restaurante;
-    
+
     public Administrador(Restaurante pRestaurante)
     {
         restaurante = pRestaurante;
     }
-    
+
     public Administrador()
     {
-        
+
     }
-    
+
     public LinkedList<Usuario> getAllUsuarios()
     {
         return restaurante.getAllUsuarios();
     }
-    
+
     public Usuario getUsuarioByUserName(String pNombreUsuario)
     {
         return restaurante.getUsuarioByUserName(pNombreUsuario);
     }
-    
+
     public void guardarUsuario(Usuario pUsuario) throws NullPointerException
     {
-        
+
         String nombreUsuario;
         String password;
         String nombre;
@@ -65,10 +65,10 @@ public class Administrador extends Usuario
         {
             throw new NullPointerException("Parametro nulo");
         }
-        
+
         try
         {
-            
+
             Usuario usuario = restaurante.getUsuarioByUserName(nombreUsuario);
             usuario.setCedula(cedula);
             usuario.setFechaNacimiento(fechaNacimiento);
@@ -76,18 +76,18 @@ public class Administrador extends Usuario
             usuario.setNombre(nombre);
             usuario.setTelefono(telefono);
             usuario.setSexo(sexo);
-            
-            
-            
+
+
+
         }
         catch(NullPointerException ex)
         {
             Usuario nuevoUsuario;
-            
+
             if( pUsuario instanceof Administrador)
             {
                 nuevoUsuario = new Administrador(restaurante);
-                
+
             }
             else
             {
@@ -99,32 +99,32 @@ public class Administrador extends Usuario
             nuevoUsuario.setNombre(nombre);
             nuevoUsuario.setTelefono(telefono);
             nuevoUsuario.setSexo(sexo);
-            
+
             restaurante.agregarUsuario(pUsuario);
-            
-            
+
+
         }
-        
+
     }
-    
+
     public void removerUsuario(String pNombreUsuario)
     {
         Usuario usuario = restaurante.getUsuarioByUserName(pNombreUsuario);
-        
+
         restaurante.removerUsuario(usuario);
     }
-    
-    
+
+
     public LinkedList<Producto> getAllProductos()
     {
         return restaurante.getAllProductos();
     }
-    
+
     public Producto getProductoPorNombre(String pNombreProducto) throws NullPointerException
     {
         return restaurante.getProductoPorNombre(pNombreProducto);
     }
-    
+
     public void guardarProducto(Producto pProducto) throws NullPointerException
     {
         String nombre;
@@ -142,14 +142,14 @@ public class Administrador extends Usuario
         {
             throw new NullPointerException("Parametro nulo");
         }
-        
+
         try
         {
             Producto producto = restaurante.getProductoPorNombre(nombre);
             producto.setPrecio(precio);
             producto.setDescuento(descuento);
             producto.setRutaImagen(rutaImagen);
-        
+
         }
         catch(NullPointerException ex)
         {
@@ -157,42 +157,42 @@ public class Administrador extends Usuario
             if(pProducto instanceof ProductoAgrandable)
             {
                 nuevoProducto = new ProductoAgrandable((ProductoAgrandable)pProducto);
-                
+
             }
             else
             {
                 nuevoProducto = new Producto(pProducto);
             }
-            
+
             restaurante.agregarProducto(pProducto);
         }
-        
-        
+
+
     }
-    
+
     public void removerProducto(String pNombreProducto)
     {
         Producto producto = getProductoPorNombre(pNombreProducto);
         restaurante.removerProducto(producto);
     }
-    
-    
+
+
     public LinkedList<Combo> getAllCombos()
     {
         return restaurante.getAllCombos();
     }
-    
+
     public Combo getComboPorNombre(String pNombreCombo) throws NullPointerException
     {
         return restaurante.getComboPorNombre(pNombreCombo);
     }
-    
+
     public void guardarCombo(Combo pCombo) throws NullPointerException
     {
         double descuento;
         String nombre;
         LinkedList<Producto> productos;
-        
+
         try
         {
             nombre = pCombo.getNombre();
@@ -203,7 +203,7 @@ public class Administrador extends Usuario
         {
             throw new NullPointerException("Parametro nulo");
         }
-        
+
         try
         {
             Combo combo = restaurante.getComboPorNombre(nombre);
@@ -216,12 +216,12 @@ public class Administrador extends Usuario
             nuevoCombo.setDescuento(descuento);
             nuevoCombo.setProductos(productos);
             restaurante.agregarCombo(pCombo);
-            
-            
+
+
         }
-        
+
     }
-    
+
     public void removerCombo(Combo pCombo)
     {
         restaurante.removerCombo(pCombo);
@@ -233,7 +233,7 @@ public class Administrador extends Usuario
     public void setRestaurante(Restaurante restaurante) {
         this.restaurante = restaurante;
     }
-    
-    
-    
+
+
+
 }
