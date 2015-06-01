@@ -48,6 +48,23 @@ public class Restaurante implements iFacturador
         
         usuarios.add(usuario);
         
+        Producto producto = new Producto();
+        producto.setNombre("aaaa");
+        producto.setPrecio(22323.0);
+        
+        Producto producto2 = new Producto();
+        producto2.setNombre("sdfsdf");
+        producto2.setPrecio(2323.0);
+        
+        Producto producto3 = new Producto();
+        producto3.setNombre("zzzzzzz");
+        producto3.setPrecio(678678.0);
+        
+        productos.add(producto);
+        productos.add(producto2);
+        productos.add(producto3);
+        
+        
         
     }
     

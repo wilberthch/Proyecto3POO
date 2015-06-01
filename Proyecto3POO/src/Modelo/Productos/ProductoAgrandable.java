@@ -30,7 +30,7 @@ public class ProductoAgrandable extends Producto implements iAgrandable {
     
     public ProductoAgrandable(int pMaxAgrandados)
     {
-        MaxAgrandados = MaxAgrandados;
+        MaxAgrandados = pMaxAgrandados;
         contadorAgrandados = 0;
         cantidadOperable = precio * porcentajePrecioAgrandado / 100;
     }

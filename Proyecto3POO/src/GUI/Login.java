@@ -120,6 +120,7 @@ public class Login extends javax.swing.JFrame {
             {
                 if(usuario instanceof Administrador)
                 {
+                    
                     AdministracionRestaurante form = new AdministracionRestaurante((Administrador) usuario);
                     form.setVisible(true);
                 }

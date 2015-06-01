@@ -221,9 +221,10 @@ public class Administrador extends Usuario
         
     }
     
-    public void removerCombo(Combo pCombo)
+    public void removerCombo(String pNombreCombo)
     {
-        restaurante.removerCombo(pCombo);
+        Combo combo = getComboPorNombre(pNombreCombo);
+        restaurante.removerCombo(combo);
     }
 
     /**

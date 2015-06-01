@@ -5,12 +5,14 @@
  */
 package GUI;
 
+import Modelo.Productos.Combo;
 import Modelo.Productos.Producto;
 import Modelo.Productos.ProductoAgrandable;
 import Modelo.Restaurante;
 import Modelo.Usuarios.Administrador;
 import Modelo.Usuarios.Cajero;
 import Modelo.Usuarios.Usuario;
+import java.awt.Dialog;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
@@ -31,6 +33,7 @@ import java.util.logging.Logger;
 import javafx.scene.shape.Shape;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
+import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -56,6 +59,13 @@ public class AdministracionRestaurante extends javax.swing.JFrame {
     private String rutaImagen = Restaurante.IMAGEN_DEFAULT;
     
     
+    private static final NonEditableTableModel combosTableModel = new NonEditableTableModel();
+    private static final String[] combosHeaders = {"Combo"};
+    private static LinkedList<Combo> combos;
+    
+    private static final NonEditableTableModel productosComboTableModel = new NonEditableTableModel();
+    private static final String[] productosComboHeaders = {"Producto", "Precio", "Cantidad para el Combo"};
+    private Combo comboActual;
     
     private static final DateTimeFormatter dateFormater = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     private JFileChooser fileChooser = new JFileChooser();
@@ -69,10 +79,14 @@ public class AdministracionRestaurante extends javax.swing.JFrame {
     public AdministracionRestaurante() {
         initComponents();
         usuarios = new LinkedList<>();
+        comboActual = new Combo();
         refreshTblUsuarios();
         refreshTblProductos();
+        refreshTblCombos();
+        refreshTblProductosCombo();
         boolean chekeado = ckb_ProductoAgrandable.isSelected();
         pnl_ContenedorProductoAgrandable.setVisible(chekeado);
+        
     }
     
      /**
@@ -85,8 +99,11 @@ public class AdministracionRestaurante extends javax.swing.JFrame {
             boolean chekeado = ckb_ProductoAgrandable.isSelected();
             pnl_ContenedorProductoAgrandable.setVisible(chekeado);
             administrador = pAdministrador;
+            comboActual = new Combo();
             refreshTblUsuarios();
             refreshTblProductos();
+            refreshTblCombos();
+            refreshTblProductosCombo();
             File file = new File(Restaurante.IMAGEN_DEFAULT);
             cargarImagenALabel(lbl_ProductoImagen, file);
             
@@ -147,6 +164,45 @@ public class AdministracionRestaurante extends javax.swing.JFrame {
         
     }
     
+    private void refreshTblCombos()
+    {
+        combos = administrador.getAllCombos();
+        int listSize = combos.size();
+        String[][] combosDatos = new String[listSize][1];
+        for(int index = 0; index < listSize; index++)
+        {
+            Combo combo = combos.get(index);
+            combosDatos[index][0]= combo.getNombre();
+            
+        }
+        
+        combosTableModel.setDataVector(combosDatos, combosHeaders);
+        tbl_Combos.setModel(combosTableModel);
+        
+    }
+    
+    private void refreshTblProductosCombo()
+    {
+        LinkedList<Producto> productosCombo = comboActual.getProductos();
+        int listSize = productosCombo.size();
+        String[][] productosComboDatos = new String[listSize][3];
+        for(int index = 0; index < listSize; index++)
+        {
+            Producto producto = productosCombo.get(index);
+            productosComboDatos[index][0] = producto.getNombre();
+            productosComboDatos[index][1] = Double.toString(producto.getPrecio());
+            productosComboDatos[index][2] = "1";
+            
+        }
+        
+        productosComboTableModel.setDataVector(productosComboDatos, productosComboHeaders);
+        tbl_ProductosCombo.setModel(productosComboTableModel);
+        
+        String precioTotalCombo = Double.toString(comboActual.getPrecio());
+        lbl_PrecioTotalCombo.setText(precioTotalCombo);
+        
+    }
+    
     private boolean esFormUsuariosValido()
     {
         boolean res = true;
@@ -173,6 +229,17 @@ public class AdministracionRestaurante extends javax.swing.JFrame {
         return res;
     }
     
+    private boolean esFormCombosValido()
+    {
+        boolean res = true;
+        
+        res &= !tf_NombreCombo.getText().isEmpty();
+        res &= !tf_DescuentoCombo.getText().isEmpty();
+        res &= !comboActual.getProductos().isEmpty();
+        
+        return res;
+    }
+    
     private void limpiarFormUsuarios()
     {
         tf_NombreUsuario.setText("");
@@ -182,6 +249,14 @@ public class AdministracionRestaurante extends javax.swing.JFrame {
         tf_FechaNacimiento.setText("");
         tf_UserNameUsuario.setText("");
         tf_Password.setText("");
+    }
+    
+    private void limpiarFormCombos()
+    {
+        tf_NombreCombo.setText("");
+        tf_DescuentoCombo.setText("");
+        comboActual = new Combo();
+        refreshTblProductosCombo();
     }
 
     /**
@@ -215,6 +290,22 @@ public class AdministracionRestaurante extends javax.swing.JFrame {
         jLabel12 = new javax.swing.JLabel();
         spn_MaximoAgrandamiento = new javax.swing.JSpinner();
         jPanel3 = new javax.swing.JPanel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        tbl_Combos = new javax.swing.JTable();
+        btn_ModificarProductos = new javax.swing.JButton();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        tbl_ProductosCombo = new javax.swing.JTable();
+        jLabel13 = new javax.swing.JLabel();
+        jLabel14 = new javax.swing.JLabel();
+        jLabel15 = new javax.swing.JLabel();
+        tf_NombreCombo = new javax.swing.JTextField();
+        tf_DescuentoCombo = new javax.swing.JFormattedTextField();
+        btn_GuardarCombo = new javax.swing.JButton();
+        btn_BorrarCombo = new javax.swing.JButton();
+        btn_Cancelar = new javax.swing.JButton();
+        btn_salir = new javax.swing.JButton();
+        jLabel16 = new javax.swing.JLabel();
+        lbl_PrecioTotalCombo = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tbl_Usuarios = new javax.swing.JTable();
@@ -355,11 +446,11 @@ public class AdministracionRestaurante extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btn_SalirProducto)
                         .addGap(6, 6, 6)))
-                .addGap(0, 101, Short.MAX_VALUE))
+                .addGap(0, 105, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 473, Short.MAX_VALUE)
+            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 495, Short.MAX_VALUE)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(29, 29, 29)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -395,15 +486,155 @@ public class AdministracionRestaurante extends javax.swing.JFrame {
 
         jTabbedPane1.addTab("Productos", jPanel2);
 
+        tbl_Combos.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        tbl_Combos.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tbl_CombosMouseClicked(evt);
+            }
+        });
+        jScrollPane3.setViewportView(tbl_Combos);
+
+        btn_ModificarProductos.setText("Modificar Productos");
+        btn_ModificarProductos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_ModificarProductosActionPerformed(evt);
+            }
+        });
+
+        tbl_ProductosCombo.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane4.setViewportView(tbl_ProductosCombo);
+
+        jLabel13.setText("Productos del Combo");
+
+        jLabel14.setText("Nombre");
+
+        jLabel15.setText("Descuento");
+
+        tf_DescuentoCombo.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#######.00"))));
+
+        btn_GuardarCombo.setText("Guardar");
+        btn_GuardarCombo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_GuardarComboActionPerformed(evt);
+            }
+        });
+
+        btn_BorrarCombo.setText("Borrar");
+        btn_BorrarCombo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_BorrarComboActionPerformed(evt);
+            }
+        });
+
+        btn_Cancelar.setText("Cancelar");
+        btn_Cancelar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_CancelarActionPerformed(evt);
+            }
+        });
+
+        btn_salir.setText("Salir");
+        btn_salir.setToolTipText("");
+        btn_salir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_salirActionPerformed(evt);
+            }
+        });
+
+        jLabel16.setText("Precio total");
+
+        lbl_PrecioTotalCombo.setText("O");
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 629, Short.MAX_VALUE)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 464, Short.MAX_VALUE)
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel13)
+                                    .addGroup(jPanel3Layout.createSequentialGroup()
+                                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(jLabel14)
+                                            .addComponent(jLabel15))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                            .addComponent(tf_NombreCombo, javax.swing.GroupLayout.DEFAULT_SIZE, 173, Short.MAX_VALUE)
+                                            .addComponent(tf_DescuentoCombo)))
+                                    .addGroup(jPanel3Layout.createSequentialGroup()
+                                        .addComponent(btn_ModificarProductos)
+                                        .addGap(111, 111, 111)
+                                        .addComponent(jLabel16)))
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addGap(342, 342, 342)
+                                .addComponent(lbl_PrecioTotalCombo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGap(43, 43, 43)
+                        .addComponent(btn_GuardarCombo)
+                        .addGap(18, 18, 18)
+                        .addComponent(btn_BorrarCombo)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btn_Cancelar)
+                        .addGap(18, 18, 18)
+                        .addComponent(btn_salir)))
+                .addGap(0, 0, 0))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 473, Short.MAX_VALUE)
+            .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 495, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                .addGap(6, 6, 6)
+                .addComponent(jLabel13)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btn_ModificarProductos)
+                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel16)
+                        .addComponent(lbl_PrecioTotalCombo)))
+                .addGap(22, 22, 22)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel14)
+                    .addComponent(tf_NombreCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel15)
+                    .addComponent(tf_DescuentoCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(59, 59, 59)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btn_GuardarCombo)
+                    .addComponent(btn_BorrarCombo)
+                    .addComponent(btn_Cancelar)
+                    .addComponent(btn_salir))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Combos", jPanel3);
@@ -524,7 +755,7 @@ public class AdministracionRestaurante extends javax.swing.JFrame {
                             .addComponent(jLabel6)
                             .addComponent(jLabel7)
                             .addComponent(jLabel8))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 60, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 64, Short.MAX_VALUE)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(rb_Administrador)
                             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
@@ -540,7 +771,7 @@ public class AdministracionRestaurante extends javax.swing.JFrame {
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 473, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 495, Short.MAX_VALUE)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -743,6 +974,73 @@ public class AdministracionRestaurante extends javax.swing.JFrame {
         pnl_ContenedorProductoAgrandable.setVisible(chekeado);
     }//GEN-LAST:event_ckb_ProductoAgrandableActionPerformed
 
+    private void btn_ModificarProductosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_ModificarProductosActionPerformed
+        ListaProductosGUI listaProductos = new ListaProductosGUI(this, true,
+                administrador, comboActual.getProductos());
+        listaProductos.setVisible(true);
+        LinkedList<Producto> productosSeleccionados = listaProductos.getProductosSeleccionados();
+        comboActual.setProductos(productosSeleccionados);
+        
+        refreshTblProductosCombo();
+    }//GEN-LAST:event_btn_ModificarProductosActionPerformed
+
+    private void btn_GuardarComboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_GuardarComboActionPerformed
+        if(esFormCombosValido())
+        {
+            String nombreCombo = tf_NombreCombo.getText();
+            Double descuentoCombo = Double.parseDouble(tf_DescuentoCombo.getText());
+            
+            
+            
+            comboActual.setNombre(nombreCombo);
+            comboActual.setDescuento(descuentoCombo);
+            
+            administrador.guardarCombo(comboActual);
+            
+            refreshTblCombos();
+            limpiarFormCombos();
+            
+        }
+        else
+        {
+            JOptionPane.showMessageDialog(this, "No se puede guardar combo sin producto o con algún campo vacío");
+        }
+    }//GEN-LAST:event_btn_GuardarComboActionPerformed
+
+    private void btn_BorrarComboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_BorrarComboActionPerformed
+        String nombreCombo = tf_NombreCombo.getText();
+        if(!nombreCombo.isEmpty())
+        {
+            administrador.removerCombo(nombreCombo);
+            refreshTblCombos();
+            limpiarFormCombos();
+        }
+        else
+        {
+            JOptionPane.showMessageDialog(this, "No hay combo seleccionado");
+        }
+    }//GEN-LAST:event_btn_BorrarComboActionPerformed
+
+    private void tbl_CombosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbl_CombosMouseClicked
+        int indexRow = tbl_Combos.getSelectedRow();
+        
+        String nombreCombo = (String)tbl_Combos.getValueAt(indexRow, 0);
+        Combo combo = administrador.getComboPorNombre(nombreCombo);
+        tf_NombreCombo.setText(combo.getNombre());
+        String descuentoComboString = Double.toString(combo.getDescuento());
+        tf_DescuentoCombo.setText(descuentoComboString);
+        comboActual.setProductos(combo.getProductos());
+        refreshTblProductosCombo();
+    }//GEN-LAST:event_tbl_CombosMouseClicked
+
+    private void btn_CancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_CancelarActionPerformed
+        limpiarFormCombos();
+    }//GEN-LAST:event_btn_CancelarActionPerformed
+
+    private void btn_salirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_salirActionPerformed
+        this.dispose();
+    }//GEN-LAST:event_btn_salirActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -781,20 +1079,29 @@ public class AdministracionRestaurante extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup bgr_Usuarios;
     private javax.swing.JButton btn_Borrar;
+    private javax.swing.JButton btn_BorrarCombo;
     private javax.swing.JButton btn_BorrarProducto;
+    private javax.swing.JButton btn_Cancelar;
     private javax.swing.JButton btn_CancelarProducto;
     private javax.swing.JButton btn_CancelarUsuario;
     private javax.swing.JButton btn_CargarImagenProducto;
+    private javax.swing.JButton btn_GuardarCombo;
     private javax.swing.JButton btn_GuardarProducto;
     private javax.swing.JButton btn_GuardarUsuario;
+    private javax.swing.JButton btn_ModificarProductos;
     private javax.swing.JButton btn_SalirProducto;
     private javax.swing.JButton btn_SalirUsuario;
+    private javax.swing.JButton btn_salir;
     private javax.swing.JComboBox cbx_Sexo;
     private javax.swing.JCheckBox ckb_ProductoAgrandable;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -808,17 +1115,24 @@ public class AdministracionRestaurante extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JLabel lbl_PrecioTotalCombo;
     private javax.swing.JLabel lbl_ProductoImagen;
     private javax.swing.JPanel pnl_ContenedorProductoAgrandable;
     private javax.swing.JRadioButton rb_Administrador;
     private javax.swing.JRadioButton rb_Cajero;
     private javax.swing.JSpinner spn_MaximoAgrandamiento;
+    private javax.swing.JTable tbl_Combos;
     private javax.swing.JTable tbl_Productos;
+    private javax.swing.JTable tbl_ProductosCombo;
     private javax.swing.JTable tbl_Usuarios;
     private javax.swing.JTextField tf_Cedula;
+    private javax.swing.JFormattedTextField tf_DescuentoCombo;
     private javax.swing.JFormattedTextField tf_DescuentoProducto;
     private javax.swing.JFormattedTextField tf_FechaNacimiento;
+    private javax.swing.JTextField tf_NombreCombo;
     private javax.swing.JTextField tf_NombreProducto;
     private javax.swing.JTextField tf_NombreUsuario;
     private javax.swing.JPasswordField tf_Password;
