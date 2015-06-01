@@ -5,6 +5,8 @@
  */
 package Modelo.Productos;
 
+import Modelo.Restaurante;
+
 /**
  *
  * @author will
@@ -16,7 +18,7 @@ public class Producto extends ObjetoVendible
     
     public Producto()
     {
-        
+        rutaImagen=Restaurante.IMAGEN_DEFAULT;
     }
 
     public Producto(Producto pProducto)

@@ -45,19 +45,18 @@ import javax.swing.filechooser.FileNameExtensionFilter;
  */
 public class AdministracionRestaurante extends javax.swing.JFrame {
 
-    
+
     private Administrador administrador;
-    
+
     private static final NonEditableTableModel usuariosTableModel = new NonEditableTableModel();
     private static final String[] usuariosHeaders = {"Usuario"};
     private static LinkedList<Usuario> usuarios;
-    
-    
+
+
     private static final NonEditableTableModel productosTableModel = new NonEditableTableModel();
     private static final String[] productosHeaders = {"Producto"};
     private static LinkedList<Producto> productos;
     private String rutaImagen = Restaurante.IMAGEN_DEFAULT;
-    
     
     private static final NonEditableTableModel combosTableModel = new NonEditableTableModel();
     private static final String[] combosHeaders = {"Combo"};
@@ -66,13 +65,13 @@ public class AdministracionRestaurante extends javax.swing.JFrame {
     private static final NonEditableTableModel productosComboTableModel = new NonEditableTableModel();
     private static final String[] productosComboHeaders = {"Producto", "Precio", "Cantidad para el Combo"};
     private Combo comboActual;
-    
+
     private static final DateTimeFormatter dateFormater = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     private JFileChooser fileChooser = new JFileChooser();
     private FileNameExtensionFilter imageFilter = new FileNameExtensionFilter("JPG,PNG, GIF Images", "jpg","png", "gif");
-    
-    
-    
+
+
+
     /**
      * Creates new form AdministracionRestaurante
      */
@@ -88,7 +87,7 @@ public class AdministracionRestaurante extends javax.swing.JFrame {
         pnl_ContenedorProductoAgrandable.setVisible(chekeado);
         
     }
-    
+
      /**
      * Creates new form AdministracionRestaurante
      * @param pAdministrador
@@ -106,13 +105,13 @@ public class AdministracionRestaurante extends javax.swing.JFrame {
             refreshTblProductosCombo();
             File file = new File(Restaurante.IMAGEN_DEFAULT);
             cargarImagenALabel(lbl_ProductoImagen, file);
-            
+
         } catch (IOException ex) {
             Logger.getLogger(AdministracionRestaurante.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
     }
-    
+
     private BufferedImage resizeImage(BufferedImage pImagen, int width, int height) {
         BufferedImage imagen = new BufferedImage(width, height, BufferedImage.TRANSLUCENT);
         Graphics2D g2d = (Graphics2D) imagen.createGraphics();
@@ -121,7 +120,7 @@ public class AdministracionRestaurante extends javax.swing.JFrame {
         g2d.dispose();
         return imagen;
     }
-    
+
     private void cargarImagenALabel(JLabel pLabel, File pFile) throws IOException
     {
         BufferedImage imagen = ImageIO.read(pFile);
@@ -129,7 +128,7 @@ public class AdministracionRestaurante extends javax.swing.JFrame {
         ImageIcon imagenIcon = new ImageIcon(imagenAjustada);
         pLabel.setIcon(imagenIcon);
     }
-    
+
     private void refreshTblUsuarios()
     {
         usuarios = administrador.getAllUsuarios();
@@ -139,14 +138,14 @@ public class AdministracionRestaurante extends javax.swing.JFrame {
         {
             Usuario usuario = usuarios.get(index);
             usuariosDatos[index][0]= usuario.getNombreUsuario();
-            
+
         }
-        
+
         usuariosTableModel.setDataVector(usuariosDatos, usuariosHeaders);
         tbl_Usuarios.setModel(usuariosTableModel);
-        
+
     }
-    
+
     private void refreshTblProductos()
     {
         productos = administrador.getAllProductos();
@@ -156,12 +155,12 @@ public class AdministracionRestaurante extends javax.swing.JFrame {
         {
             Producto producto = productos.get(index);
             productosDatos[index][0]= producto.getNombre();
-            
+
         }
-        
+
         productosTableModel.setDataVector(productosDatos, productosHeaders);
         tbl_Productos.setModel(productosTableModel);
-        
+
     }
     
     private void refreshTblCombos()
@@ -202,11 +201,11 @@ public class AdministracionRestaurante extends javax.swing.JFrame {
         lbl_PrecioTotalCombo.setText(precioTotalCombo);
         
     }
-    
+
     private boolean esFormUsuariosValido()
     {
         boolean res = true;
-        
+
         res &= !tf_NombreUsuario.getText().isEmpty();
         res &= !tf_Telefono.getText().isEmpty();
         res &= !tf_Cedula.getText().isEmpty();
@@ -214,18 +213,18 @@ public class AdministracionRestaurante extends javax.swing.JFrame {
         res &= !tf_UserNameUsuario.getText().isEmpty();
         String password = new String(tf_Password.getPassword());
         res &= !password.isEmpty();
-        
+
         return res;
     }
-    
+
     private boolean esFormProductosValido()
     {
         boolean res = true;
-        
+
         res &= !tf_NombreProducto.getText().isEmpty();
         res &= !tf_PrecioProducto.getText().isEmpty();
         res &= !tf_DescuentoProducto.getText().isEmpty();
-        
+
         return res;
     }
     
@@ -239,7 +238,7 @@ public class AdministracionRestaurante extends javax.swing.JFrame {
         
         return res;
     }
-    
+
     private void limpiarFormUsuarios()
     {
         tf_NombreUsuario.setText("");
@@ -257,6 +256,23 @@ public class AdministracionRestaurante extends javax.swing.JFrame {
         tf_DescuentoCombo.setText("");
         comboActual = new Combo();
         refreshTblProductosCombo();
+    }
+
+
+    private void limpiarFormProducto()
+    {
+        tf_NombreProducto.setText("");
+        tf_PrecioProducto.setText("");
+        tf_DescuentoProducto.setText("");
+        ckb_ProductoAgrandable.setSelected(false);
+        pnl_ContenedorProductoAgrandable.setVisible(false);
+        File file = new File(Restaurante.IMAGEN_DEFAULT);
+        try{
+        cargarImagenALabel(lbl_ProductoImagen, file);
+        }catch (Exception x){
+
+        }
+
     }
 
     /**
@@ -345,6 +361,11 @@ public class AdministracionRestaurante extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        tbl_Productos.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tbl_ProductosMouseClicked(evt);
+            }
+        });
         jScrollPane2.setViewportView(tbl_Productos);
 
         jLabel9.setText("Nombre");
@@ -375,9 +396,26 @@ public class AdministracionRestaurante extends javax.swing.JFrame {
 
         btn_BorrarProducto.setText("Borrar");
 
+        btn_BorrarProducto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_BorrarProductoActionPerformed(evt);
+            }
+        });
+
         btn_CancelarProducto.setText("Cancelar");
+        btn_CancelarProducto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_CancelarProductoActionPerformed(evt);
+            }
+        });
 
         btn_SalirProducto.setText("Salir");
+        btn_SalirProducto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_SalirProductoActionPerformed(evt);
+            }
+        });
+
 
         ckb_ProductoAgrandable.setText("Producto Agrandable");
         ckb_ProductoAgrandable.addActionListener(new java.awt.event.ActionListener() {
@@ -837,8 +875,8 @@ public class AdministracionRestaurante extends javax.swing.JFrame {
     }//GEN-LAST:event_btn_CancelarUsuarioActionPerformed
 
     private void btn_GuardarUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_GuardarUsuarioActionPerformed
-        
-        
+
+
         if(esFormUsuariosValido())
         {
             Usuario usuario;
@@ -851,18 +889,18 @@ public class AdministracionRestaurante extends javax.swing.JFrame {
             {
                 usuario = new Cajero();
             }
-            
+
             String nombre = tf_NombreUsuario.getText();
             String cedula = tf_Cedula.getText();
             String telefono = tf_Telefono.getText();
-            
+
             String fechaNacimientoString = tf_FechaNacimiento.getText();
             LocalDate fechaNacimiento = LocalDate.parse(fechaNacimientoString, dateFormater);
             String sexoString = (String)cbx_Sexo.getSelectedItem();
             char sexo = sexoString.charAt(0);
             String nombreUsuario = tf_UserNameUsuario.getText();
             String password = new String(tf_Password.getPassword());
-            
+
             usuario.setNombre(nombre);
             usuario.setCedula(cedula);
             usuario.setTelefono(telefono);
@@ -870,23 +908,23 @@ public class AdministracionRestaurante extends javax.swing.JFrame {
             usuario.setSexo(sexo);
             usuario.setNombreUsuario(nombreUsuario);
             usuario.setPassword(password);
-            
-            
+
+
             administrador.guardarUsuario(usuario);
-            
+
             refreshTblUsuarios();
             limpiarFormUsuarios();
-            
-            
-            
-            
+
+
+
+
         }
         else
         {
             JOptionPane.showMessageDialog(this, "Todos los campos son requeridos");
         }
-        
-        
+
+
     }//GEN-LAST:event_btn_GuardarUsuarioActionPerformed
 
     private void btn_SalirUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_SalirUsuarioActionPerformed
@@ -909,7 +947,7 @@ public class AdministracionRestaurante extends javax.swing.JFrame {
 
     private void tbl_UsuariosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbl_UsuariosMouseClicked
         int indexRow = tbl_Usuarios.getSelectedRow();
-        
+
         String nombreUsuario = (String)tbl_Usuarios.getValueAt(indexRow, 0);
         Usuario usuario = administrador.getUsuarioByUserName(nombreUsuario);
         tf_NombreUsuario.setText(usuario.getNombre());
@@ -925,7 +963,7 @@ public class AdministracionRestaurante extends javax.swing.JFrame {
         boolean esAdmin = usuario instanceof Administrador;
         rb_Administrador.setSelected(esAdmin);
         rb_Cajero.setSelected(!esAdmin);
-        
+
     }//GEN-LAST:event_tbl_UsuariosMouseClicked
 
     private void btn_CargarImagenProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_CargarImagenProductoActionPerformed
@@ -938,8 +976,8 @@ public class AdministracionRestaurante extends javax.swing.JFrame {
             Path newImagePath = Paths.get(Restaurante.IMAGES_PATH + file.getName());
             rutaImagen = newImagePath.toString();
             System.out.println(filePath);
-            
-           
+
+
             try {
                 Files.copy(filePath, newImagePath, REPLACE_EXISTING);
                 cargarImagenALabel(lbl_ProductoImagen, file);
@@ -963,9 +1001,15 @@ public class AdministracionRestaurante extends javax.swing.JFrame {
             {
                 producto = new Producto();
             }
-            
+
             producto.setRutaImagen(rutaImagen);
-            
+            producto.setNombre(tf_NombreProducto.getText());
+            producto.setPrecio(Double.parseDouble(tf_PrecioProducto.getText()));
+            producto.setDescuento(Double.parseDouble(tf_DescuentoProducto.getText()));
+
+            administrador.guardarProducto(producto);
+            refreshTblProductos();
+            limpiarFormProducto();
         }
     }//GEN-LAST:event_btn_GuardarProductoActionPerformed
 
@@ -973,6 +1017,7 @@ public class AdministracionRestaurante extends javax.swing.JFrame {
         boolean chekeado = ckb_ProductoAgrandable.isSelected();
         pnl_ContenedorProductoAgrandable.setVisible(chekeado);
     }//GEN-LAST:event_ckb_ProductoAgrandableActionPerformed
+
 
     private void btn_ModificarProductosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_ModificarProductosActionPerformed
         ListaProductosGUI listaProductos = new ListaProductosGUI(this, true,
@@ -1041,6 +1086,51 @@ public class AdministracionRestaurante extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_btn_salirActionPerformed
 
+    private void tbl_ProductosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbl_ProductosMouseClicked
+        int indexRow = tbl_Productos.getSelectedRow();
+
+        String nombreProducto = (String) tbl_Productos.getValueAt(indexRow, 0);
+        Producto producto = administrador.getProductoPorNombre(nombreProducto);
+        if (producto instanceof ProductoAgrandable){
+            ckb_ProductoAgrandable.setSelected(true);
+            pnl_ContenedorProductoAgrandable.setVisible(true);
+            ProductoAgrandable productoAgrandable = (ProductoAgrandable)producto;
+            spn_MaximoAgrandamiento.setValue((Object)productoAgrandable.getMaxAgrandados());
+            System.out.println(productoAgrandable.getMaxAgrandados());
+        }
+        tf_NombreProducto.setText(producto.getNombre());
+        tf_PrecioProducto.setText(Double.toString(producto.getPrecio()));
+        tf_DescuentoProducto.setText(Double.toString(producto.getDescuento()));
+        
+        File file = new File(producto.getRutaImagen());
+        try{
+        cargarImagenALabel(lbl_ProductoImagen, file);
+        }catch (Exception x){
+
+        }
+    }//GEN-LAST:event_tbl_ProductosMouseClicked
+
+    private void btn_BorrarProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_BorrarProductoActionPerformed
+        String nombreProducto = tf_NombreProducto.getText();
+        if(!nombreProducto.isEmpty())
+        {
+            administrador.removerProducto(nombreProducto);
+        }
+        else
+        {
+            JOptionPane.showMessageDialog(this, "No hay producto seleccionado");
+        }
+        refreshTblProductos();
+        limpiarFormProducto();
+    }//GEN-LAST:event_btn_BorrarProductoActionPerformed
+
+    private void btn_SalirProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_SalirProductoActionPerformed
+        this.dispose();
+    }//GEN-LAST:event_btn_SalirProductoActionPerformed
+
+    private void btn_CancelarProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_CancelarProductoActionPerformed
+        limpiarFormProducto();
+    }//GEN-LAST:event_btn_CancelarProductoActionPerformed
     /**
      * @param args the command line arguments
      */
@@ -1048,7 +1138,7 @@ public class AdministracionRestaurante extends javax.swing.JFrame {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
