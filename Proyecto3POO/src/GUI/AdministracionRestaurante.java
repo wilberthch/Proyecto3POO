@@ -803,6 +803,13 @@ public class AdministracionRestaurante extends javax.swing.JFrame {
         tf_NombreProducto.setText(producto.getNombre());
         tf_PrecioProducto.setText(Double.toString(producto.getPrecio()));
         tf_DescuentoProducto.setText(Double.toString(producto.getDescuento()));
+        
+        File file = new File(producto.getRutaImagen());
+        try{
+        cargarImagenALabel(lbl_ProductoImagen, file);
+        }catch (Exception x){
+
+        }
     }//GEN-LAST:event_tbl_ProductosMouseClicked
 
     private void btn_BorrarProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_BorrarProductoActionPerformed
