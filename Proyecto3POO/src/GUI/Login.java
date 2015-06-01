@@ -123,6 +123,7 @@ public class Login extends javax.swing.JFrame {
                     AdministracionRestaurante form = new AdministracionRestaurante((Administrador) usuario);
                     form.setVisible(true);
                 }
+                
             }
             else
             {

@@ -6,6 +6,7 @@
 package GUI;
 
 import Modelo.Productos.Producto;
+import Modelo.Productos.ProductoAgrandable;
 import Modelo.Restaurante;
 import Modelo.Usuarios.Administrador;
 import Modelo.Usuarios.Cajero;
@@ -52,7 +53,7 @@ public class AdministracionRestaurante extends javax.swing.JFrame {
     private static final NonEditableTableModel productosTableModel = new NonEditableTableModel();
     private static final String[] productosHeaders = {"Producto"};
     private static LinkedList<Producto> productos;
-    private String rutaImagen;
+    private String rutaImagen = Restaurante.IMAGEN_DEFAULT;
     
     
     
@@ -86,7 +87,7 @@ public class AdministracionRestaurante extends javax.swing.JFrame {
             administrador = pAdministrador;
             refreshTblUsuarios();
             refreshTblProductos();
-            File file = new File("ProductoImagenes/default.png");
+            File file = new File(Restaurante.IMAGEN_DEFAULT);
             cargarImagenALabel(lbl_ProductoImagen, file);
             
         } catch (IOException ex) {
@@ -212,7 +213,7 @@ public class AdministracionRestaurante extends javax.swing.JFrame {
         ckb_ProductoAgrandable = new javax.swing.JCheckBox();
         pnl_ContenedorProductoAgrandable = new javax.swing.JPanel();
         jLabel12 = new javax.swing.JLabel();
-        jSpinner1 = new javax.swing.JSpinner();
+        spn_MaximoAgrandamiento = new javax.swing.JSpinner();
         jPanel3 = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -296,7 +297,7 @@ public class AdministracionRestaurante extends javax.swing.JFrame {
 
         jLabel12.setText("Cantidad Agrandamientos");
 
-        jSpinner1.setModel(new javax.swing.SpinnerNumberModel(1, 1, 3, 1));
+        spn_MaximoAgrandamiento.setModel(new javax.swing.SpinnerNumberModel(1, 1, 3, 1));
 
         javax.swing.GroupLayout pnl_ContenedorProductoAgrandableLayout = new javax.swing.GroupLayout(pnl_ContenedorProductoAgrandable);
         pnl_ContenedorProductoAgrandable.setLayout(pnl_ContenedorProductoAgrandableLayout);
@@ -306,7 +307,7 @@ public class AdministracionRestaurante extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jLabel12)
                 .addGap(18, 18, 18)
-                .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(spn_MaximoAgrandamiento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(67, Short.MAX_VALUE))
         );
         pnl_ContenedorProductoAgrandableLayout.setVerticalGroup(
@@ -315,7 +316,7 @@ public class AdministracionRestaurante extends javax.swing.JFrame {
                 .addContainerGap(21, Short.MAX_VALUE)
                 .addGroup(pnl_ContenedorProductoAgrandableLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel12)
-                    .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(spn_MaximoAgrandamiento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(15, 15, 15))
         );
 
@@ -704,6 +705,7 @@ public class AdministracionRestaurante extends javax.swing.JFrame {
             File file = fileChooser.getSelectedFile();
             Path filePath = Paths.get(file.getPath());
             Path newImagePath = Paths.get(Restaurante.IMAGES_PATH + file.getName());
+            rutaImagen = newImagePath.toString();
             System.out.println(filePath);
             
            
@@ -719,6 +721,19 @@ public class AdministracionRestaurante extends javax.swing.JFrame {
     private void btn_GuardarProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_GuardarProductoActionPerformed
         if(esFormProductosValido())
         {
+            int maximoAgrandamiento = (Integer) spn_MaximoAgrandamiento.getValue();
+            Producto producto;
+            boolean chekeado = ckb_ProductoAgrandable.isSelected();
+            if(chekeado)
+            {
+                producto = new ProductoAgrandable(maximoAgrandamiento);
+            }
+            else
+            {
+                producto = new Producto();
+            }
+            
+            producto.setRutaImagen(rutaImagen);
             
         }
     }//GEN-LAST:event_btn_GuardarProductoActionPerformed
@@ -793,12 +808,12 @@ public class AdministracionRestaurante extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JSpinner jSpinner1;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JLabel lbl_ProductoImagen;
     private javax.swing.JPanel pnl_ContenedorProductoAgrandable;
     private javax.swing.JRadioButton rb_Administrador;
     private javax.swing.JRadioButton rb_Cajero;
+    private javax.swing.JSpinner spn_MaximoAgrandamiento;
     private javax.swing.JTable tbl_Productos;
     private javax.swing.JTable tbl_Usuarios;
     private javax.swing.JTextField tf_Cedula;

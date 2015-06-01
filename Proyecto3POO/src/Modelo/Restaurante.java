@@ -28,6 +28,7 @@ public class Restaurante implements iFacturador
     private final LinkedList<Combo> combos;
     private final LinkedList<Factura> facturas;
     public static final String IMAGES_PATH =  "ProductoImagenes/";
+    public static final String IMAGEN_DEFAULT =  IMAGES_PATH + "default.png";
     
     public Restaurante()
     {
