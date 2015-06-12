@@ -5,19 +5,12 @@
  */
 package GUI;
 
-import javax.swing.table.DefaultTableModel;
-
 /**
  *
  * @author will
  */
-public class NonEditableTableModel extends DefaultTableModel {
+public interface iSujeto {
     
-    @Override
-    public boolean isCellEditable(int row, int column)
-    {
-        return column == 2;
-        
-    }
+    void alertar(boolean pRemover);
     
 }

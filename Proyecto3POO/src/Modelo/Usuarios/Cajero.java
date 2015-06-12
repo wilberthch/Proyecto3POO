@@ -7,7 +7,10 @@ package Modelo.Usuarios;
 
 import Modelo.Facturacion.Factura;
 import Modelo.Facturacion.iFacturador;
+import Modelo.Productos.Combo;
 import Modelo.Productos.ObjetoVendible;
+import Modelo.Productos.Producto;
+import Modelo.Restaurante;
 import java.util.LinkedList;
 
 
@@ -51,6 +54,24 @@ public class Cajero extends Usuario
             factura = new Factura(this, items);
             restaurante.agregarFactura(factura);
         }
+    }
+    
+    public LinkedList<Producto> getAllProductos()
+    {
+        return restaurante.getAllProductos();
+    }
+    
+    public LinkedList<Combo> getAllCombos()
+    {
+        return restaurante.getAllCombos();
+    }
+    
+    
+
+    @Override
+    public void actualizarRestaurante(Restaurante pRestaurante) {
+        restaurante = (iFacturador)pRestaurante;
+    
     }
     
     

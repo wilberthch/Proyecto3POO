@@ -8,6 +8,9 @@ package Modelo.Facturacion;
 
 
 import Modelo.Facturacion.Factura;
+import Modelo.Productos.Combo;
+import Modelo.Productos.Producto;
+import java.util.LinkedList;
 
 /**
  *
@@ -18,6 +21,8 @@ public interface iFacturador {
     Factura getFacturaPorId(int pId) throws NullPointerException;
     void agregarFactura(Factura pFactura);
     void removerFactura(Factura pFactura);
+    LinkedList<Producto> getAllProductos();
+    LinkedList<Combo> getAllCombos();
     
     
 }

@@ -5,13 +5,14 @@
  */
 package Modelo.Usuarios;
 
+import Modelo.Restaurante;
 import java.time.LocalDate;
 
 /**
  *
  * @author will
  */
-public class Usuario implements Comparable<Usuario>
+public abstract class Usuario implements Comparable<Usuario>
 {
     private String nombre;
     private String cedula;
@@ -127,6 +128,8 @@ public class Usuario implements Comparable<Usuario>
         System.out.println(password);
         return password.equals(pPassword);
     }
+    
+    public abstract void actualizarRestaurante(Restaurante pRestaurante);
 
     @Override
     public int compareTo(Usuario o) {

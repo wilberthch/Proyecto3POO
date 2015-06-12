@@ -5,6 +5,9 @@
  */
 package GUI;
 
+import GUI.Tools.NonEditableTableModel;
+import GUI.Tools.ImageTools;
+import Modelo.Productos.ObjetoVendible;
 import Modelo.Productos.Combo;
 import Modelo.Productos.Producto;
 import Modelo.Productos.ProductoAgrandable;
@@ -12,15 +15,8 @@ import Modelo.Restaurante;
 import Modelo.Usuarios.Administrador;
 import Modelo.Usuarios.Cajero;
 import Modelo.Usuarios.Usuario;
-import java.awt.Dialog;
-import java.awt.Graphics2D;
-import java.awt.RenderingHints;
-import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -30,12 +26,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.scene.shape.Shape;
-import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
-import javax.swing.JDialog;
 import javax.swing.JFileChooser;
-import javax.swing.JLabel;
+
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
@@ -56,7 +48,8 @@ public class AdministracionRestaurante extends javax.swing.JFrame {
     private static final NonEditableTableModel productosTableModel = new NonEditableTableModel();
     private static final String[] productosHeaders = {"Producto"};
     private static LinkedList<Producto> productos;
-    private String rutaImagen = Restaurante.IMAGEN_DEFAULT;
+    private String rutaImagenProducto = ObjetoVendible.IMAGEN_DEFAULT;
+    private String rutaImagenCombo = ObjetoVendible.IMAGEN_DEFAULT;
     
     private static final NonEditableTableModel combosTableModel = new NonEditableTableModel();
     private static final String[] combosHeaders = {"Combo"};
@@ -103,32 +96,16 @@ public class AdministracionRestaurante extends javax.swing.JFrame {
             refreshTblProductos();
             refreshTblCombos();
             refreshTblProductosCombo();
-            File file = new File(Restaurante.IMAGEN_DEFAULT);
-            cargarImagenALabel(lbl_ProductoImagen, file);
+            File file = new File(ObjetoVendible.IMAGEN_DEFAULT);
+            ImageTools.cargarImagenALabel(lbl_ProductoImagen, file);
+            ImageTools.cargarImagenALabel(lbl_ComboImagen, file);
 
         } catch (IOException ex) {
             Logger.getLogger(AdministracionRestaurante.class.getName()).log(Level.SEVERE, null, ex);
         }
 
     }
-
-    private BufferedImage resizeImage(BufferedImage pImagen, int width, int height) {
-        BufferedImage imagen = new BufferedImage(width, height, BufferedImage.TRANSLUCENT);
-        Graphics2D g2d = (Graphics2D) imagen.createGraphics();
-        g2d.addRenderingHints(new RenderingHints(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY));
-        g2d.drawImage(pImagen, 0, 0, width, height, null);
-        g2d.dispose();
-        return imagen;
-    }
-
-    private void cargarImagenALabel(JLabel pLabel, File pFile) throws IOException
-    {
-        BufferedImage imagen = ImageIO.read(pFile);
-        BufferedImage imagenAjustada = resizeImage(imagen, pLabel.getWidth(), pLabel.getHeight());
-        ImageIcon imagenIcon = new ImageIcon(imagenAjustada);
-        pLabel.setIcon(imagenIcon);
-    }
-
+    
     private void refreshTblUsuarios()
     {
         usuarios = administrador.getAllUsuarios();
@@ -248,13 +225,21 @@ public class AdministracionRestaurante extends javax.swing.JFrame {
         tf_FechaNacimiento.setText("");
         tf_UserNameUsuario.setText("");
         tf_Password.setText("");
+        rb_Administrador.setSelected(true);
+        rb_Cajero.setSelected(false);
     }
     
     private void limpiarFormCombos()
     {
         tf_NombreCombo.setText("");
-        tf_DescuentoCombo.setText("");
+        tf_DescuentoCombo.setText("0");
         comboActual = new Combo();
+        File file = new File(ObjetoVendible.IMAGEN_DEFAULT);
+        try{
+        ImageTools.cargarImagenALabel(lbl_ComboImagen, file);
+        }catch (Exception x){
+
+        }
         refreshTblProductosCombo();
     }
 
@@ -263,12 +248,13 @@ public class AdministracionRestaurante extends javax.swing.JFrame {
     {
         tf_NombreProducto.setText("");
         tf_PrecioProducto.setText("");
-        tf_DescuentoProducto.setText("");
+        tf_DescuentoProducto.setText("0");
         ckb_ProductoAgrandable.setSelected(false);
         pnl_ContenedorProductoAgrandable.setVisible(false);
-        File file = new File(Restaurante.IMAGEN_DEFAULT);
+        spn_MaximoAgrandamiento.setValue((Object)1);
+        File file = new File(ObjetoVendible.IMAGEN_DEFAULT);
         try{
-        cargarImagenALabel(lbl_ProductoImagen, file);
+        ImageTools.cargarImagenALabel(lbl_ProductoImagen, file);
         }catch (Exception x){
 
         }
@@ -322,6 +308,8 @@ public class AdministracionRestaurante extends javax.swing.JFrame {
         btn_salir = new javax.swing.JButton();
         jLabel16 = new javax.swing.JLabel();
         lbl_PrecioTotalCombo = new javax.swing.JLabel();
+        lbl_ComboImagen = new javax.swing.JLabel();
+        btn_CargarImagenCombo = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tbl_Usuarios = new javax.swing.JTable();
@@ -347,7 +335,7 @@ public class AdministracionRestaurante extends javax.swing.JFrame {
         jLabel8 = new javax.swing.JLabel();
         btn_Borrar = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("AdRes [Administración]");
 
         tbl_Productos.setModel(new javax.swing.table.DefaultTableModel(
@@ -377,6 +365,7 @@ public class AdministracionRestaurante extends javax.swing.JFrame {
         tf_PrecioProducto.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#######.00"))));
 
         tf_DescuentoProducto.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#######.00"))));
+        tf_DescuentoProducto.setText("0");
 
         lbl_ProductoImagen.setBackground(new java.awt.Color(1, 1, 1));
 
@@ -395,7 +384,6 @@ public class AdministracionRestaurante extends javax.swing.JFrame {
         });
 
         btn_BorrarProducto.setText("Borrar");
-
         btn_BorrarProducto.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_BorrarProductoActionPerformed(evt);
@@ -415,7 +403,6 @@ public class AdministracionRestaurante extends javax.swing.JFrame {
                 btn_SalirProductoActionPerformed(evt);
             }
         });
-
 
         ckb_ProductoAgrandable.setText("Producto Agrandable");
         ckb_ProductoAgrandable.addActionListener(new java.awt.event.ActionListener() {
@@ -569,6 +556,7 @@ public class AdministracionRestaurante extends javax.swing.JFrame {
         jLabel15.setText("Descuento");
 
         tf_DescuentoCombo.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#######.00"))));
+        tf_DescuentoCombo.setText("0");
 
         btn_GuardarCombo.setText("Guardar");
         btn_GuardarCombo.addActionListener(new java.awt.event.ActionListener() {
@@ -603,6 +591,15 @@ public class AdministracionRestaurante extends javax.swing.JFrame {
 
         lbl_PrecioTotalCombo.setText("O");
 
+        lbl_ComboImagen.setBackground(new java.awt.Color(1, 1, 1));
+
+        btn_CargarImagenCombo.setText("Cargar Imagen");
+        btn_CargarImagenCombo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_CargarImagenComboActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
@@ -628,21 +625,25 @@ public class AdministracionRestaurante extends javax.swing.JFrame {
                                     .addGroup(jPanel3Layout.createSequentialGroup()
                                         .addComponent(btn_ModificarProductos)
                                         .addGap(111, 111, 111)
-                                        .addComponent(jLabel16)))
+                                        .addComponent(jLabel16))
+                                    .addGroup(jPanel3Layout.createSequentialGroup()
+                                        .addComponent(lbl_ComboImagen, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(41, 41, 41)
+                                        .addComponent(btn_CargarImagenCombo)))
                                 .addGap(0, 0, Short.MAX_VALUE))
                             .addGroup(jPanel3Layout.createSequentialGroup()
                                 .addGap(342, 342, 342)
                                 .addComponent(lbl_PrecioTotalCombo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGap(43, 43, 43)
+                        .addGap(42, 42, 42)
                         .addComponent(btn_GuardarCombo)
                         .addGap(18, 18, 18)
                         .addComponent(btn_BorrarCombo)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(btn_Cancelar)
-                        .addGap(18, 18, 18)
-                        .addComponent(btn_salir)))
-                .addGap(0, 0, 0))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btn_salir)
+                        .addContainerGap())))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -666,13 +667,19 @@ public class AdministracionRestaurante extends javax.swing.JFrame {
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel15)
                     .addComponent(tf_DescuentoCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(59, 59, 59)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lbl_ComboImagen, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGap(61, 61, 61)
+                        .addComponent(btn_CargarImagenCombo)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btn_GuardarCombo)
                     .addComponent(btn_BorrarCombo)
                     .addComponent(btn_Cancelar)
                     .addComponent(btn_salir))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(20, 20, 20))
         );
 
         jTabbedPane1.addTab("Combos", jPanel3);
@@ -973,14 +980,14 @@ public class AdministracionRestaurante extends javax.swing.JFrame {
         {
             File file = fileChooser.getSelectedFile();
             Path filePath = Paths.get(file.getPath());
-            Path newImagePath = Paths.get(Restaurante.IMAGES_PATH + file.getName());
-            rutaImagen = newImagePath.toString();
+            Path newImagePath = Paths.get(ObjetoVendible.IMAGES_PATH + file.getName());
+            rutaImagenProducto = newImagePath.toString();
             System.out.println(filePath);
 
 
             try {
                 Files.copy(filePath, newImagePath, REPLACE_EXISTING);
-                cargarImagenALabel(lbl_ProductoImagen, file);
+                ImageTools.cargarImagenALabel(lbl_ProductoImagen, file);
             } catch (IOException ex) {
                 Logger.getLogger(AdministracionRestaurante.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -1002,7 +1009,7 @@ public class AdministracionRestaurante extends javax.swing.JFrame {
                 producto = new Producto();
             }
 
-            producto.setRutaImagen(rutaImagen);
+            producto.setRutaImagen(rutaImagenProducto);
             producto.setNombre(tf_NombreProducto.getText());
             producto.setPrecio(Double.parseDouble(tf_PrecioProducto.getText()));
             producto.setDescuento(Double.parseDouble(tf_DescuentoProducto.getText()));
@@ -1010,6 +1017,10 @@ public class AdministracionRestaurante extends javax.swing.JFrame {
             administrador.guardarProducto(producto);
             refreshTblProductos();
             limpiarFormProducto();
+        }
+        else
+        {
+            JOptionPane.showMessageDialog(this, "El nombre y el precio son obligatorios");
         }
     }//GEN-LAST:event_btn_GuardarProductoActionPerformed
 
@@ -1039,7 +1050,7 @@ public class AdministracionRestaurante extends javax.swing.JFrame {
             
             comboActual.setNombre(nombreCombo);
             comboActual.setDescuento(descuentoCombo);
-            
+            comboActual.setRutaImagen(rutaImagenCombo);
             administrador.guardarCombo(comboActual);
             
             refreshTblCombos();
@@ -1104,7 +1115,7 @@ public class AdministracionRestaurante extends javax.swing.JFrame {
         
         File file = new File(producto.getRutaImagen());
         try{
-        cargarImagenALabel(lbl_ProductoImagen, file);
+        ImageTools.cargarImagenALabel(lbl_ProductoImagen, file);
         }catch (Exception x){
 
         }
@@ -1131,6 +1142,27 @@ public class AdministracionRestaurante extends javax.swing.JFrame {
     private void btn_CancelarProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_CancelarProductoActionPerformed
         limpiarFormProducto();
     }//GEN-LAST:event_btn_CancelarProductoActionPerformed
+
+    private void btn_CargarImagenComboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_CargarImagenComboActionPerformed
+        fileChooser.setFileFilter(imageFilter);
+        int opcion = fileChooser.showOpenDialog(this);
+        if(opcion == JFileChooser.APPROVE_OPTION)
+        {
+            File file = fileChooser.getSelectedFile();
+            Path filePath = Paths.get(file.getPath());
+            Path newImagePath = Paths.get(ObjetoVendible.IMAGES_PATH + file.getName());
+            rutaImagenCombo = newImagePath.toString();
+            System.out.println(filePath);
+
+
+            try {
+                Files.copy(filePath, newImagePath, REPLACE_EXISTING);
+                ImageTools.cargarImagenALabel(lbl_ComboImagen, file);
+            } catch (IOException ex) {
+                Logger.getLogger(AdministracionRestaurante.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }//GEN-LAST:event_btn_CargarImagenComboActionPerformed
     /**
      * @param args the command line arguments
      */
@@ -1174,6 +1206,7 @@ public class AdministracionRestaurante extends javax.swing.JFrame {
     private javax.swing.JButton btn_Cancelar;
     private javax.swing.JButton btn_CancelarProducto;
     private javax.swing.JButton btn_CancelarUsuario;
+    private javax.swing.JButton btn_CargarImagenCombo;
     private javax.swing.JButton btn_CargarImagenProducto;
     private javax.swing.JButton btn_GuardarCombo;
     private javax.swing.JButton btn_GuardarProducto;
@@ -1208,6 +1241,7 @@ public class AdministracionRestaurante extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JLabel lbl_ComboImagen;
     private javax.swing.JLabel lbl_PrecioTotalCombo;
     private javax.swing.JLabel lbl_ProductoImagen;
     private javax.swing.JPanel pnl_ContenedorProductoAgrandable;

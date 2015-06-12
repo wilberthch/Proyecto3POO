@@ -14,32 +14,22 @@ import Modelo.Restaurante;
 public class Producto extends ObjetoVendible
 {
     
-    protected String rutaImagen;
+    
     
     public Producto()
     {
-        rutaImagen=Restaurante.IMAGEN_DEFAULT;
+        super();
+        nombre = "nombre";
     }
 
     public Producto(Producto pProducto)
     {
+        
         nombre = pProducto.getNombre();
         precio = pProducto.getPrecio();
         descuento = pProducto.getDescuento();
         rutaImagen = pProducto.getRutaImagen();
     }
 
-    /**
-     * @return the rutaImagen
-     */
-    public String getRutaImagen() {
-        return rutaImagen;
-    }
-
-    /**
-     * @param rutaImagen the rutaImagen to set
-     */
-    public void setRutaImagen(String rutaImagen) {
-        this.rutaImagen = rutaImagen;
-    }
+    
 }

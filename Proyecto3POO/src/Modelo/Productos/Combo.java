@@ -20,7 +20,7 @@ public class Combo extends ObjetoVendible implements iAgrandable {
     
     public Combo()
     {
-        
+        super();
         productos = new LinkedList<>();
     }
     

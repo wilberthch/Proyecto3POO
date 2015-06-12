@@ -5,6 +5,7 @@
  */
 package GUI;
 
+import GUI.Tools.NonEditableTableModel;
 import Modelo.Productos.Producto;
 import Modelo.Usuarios.Administrador;
 import Modelo.Usuarios.Usuario;
@@ -103,21 +104,12 @@ public class ListaProductosGUI extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        tf_Filtro = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
         tbl_Productos = new javax.swing.JTable();
         btn_Salir = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-
-        tf_Filtro.setToolTipText("Filtro");
-        tf_Filtro.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                tf_FiltroKeyTyped(evt);
-            }
-        });
 
         tbl_Productos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -142,8 +134,6 @@ public class ListaProductosGUI extends javax.swing.JDialog {
         jLabel1.setFont(new java.awt.Font("Cantarell", 1, 12)); // NOI18N
         jLabel1.setText("Para Seleccionar multiples productos mantener precionada la tecla Ctrl al darle click a las filas");
 
-        jLabel2.setText("Filtrar");
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -156,10 +146,7 @@ public class ListaProductosGUI extends javax.swing.JDialog {
                         .addComponent(jLabel1)
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel2)
-                        .addGap(18, 18, 18)
-                        .addComponent(tf_Filtro, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(btn_Salir)))
                 .addContainerGap())
         );
@@ -170,10 +157,7 @@ public class ListaProductosGUI extends javax.swing.JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel1)
                 .addGap(13, 13, 13)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(tf_Filtro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btn_Salir)
-                    .addComponent(jLabel2))
+                .addComponent(btn_Salir)
                 .addContainerGap(15, Short.MAX_VALUE))
         );
 
@@ -197,29 +181,6 @@ public class ListaProductosGUI extends javax.swing.JDialog {
         
         this.dispose();
     }//GEN-LAST:event_btn_SalirActionPerformed
-
-    private void tf_FiltroKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tf_FiltroKeyTyped
-        String filtro = tf_Filtro.getText();
-        LinkedList<Producto> nuevoTodosProductos = new LinkedList<>();
-        if(!filtro.isEmpty())
-        {
-            for(Producto producto : todosProductos)
-            {
-                String NombreProducto = producto.getNombre();
-                if(NombreProducto.contains(filtro))
-                {
-                    nuevoTodosProductos.add(producto);
-                }
-            }
-        }
-        else
-        {
-            nuevoTodosProductos = administrador.getAllProductos();
-        }
-        
-        todosProductos = nuevoTodosProductos;
-        refreshTblProductos();
-    }//GEN-LAST:event_tf_FiltroKeyTyped
 
     /**
      * @param args the command line arguments
@@ -266,9 +227,7 @@ public class ListaProductosGUI extends javax.swing.JDialog {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_Salir;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable tbl_Productos;
-    private javax.swing.JTextField tf_Filtro;
     // End of variables declaration//GEN-END:variables
 }

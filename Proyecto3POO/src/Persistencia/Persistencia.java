@@ -8,6 +8,7 @@ package Persistencia;
 import com.cedarsoftware.util.io.JsonReader;
 import com.cedarsoftware.util.io.JsonWriter;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 
 /**
@@ -17,8 +18,8 @@ import java.io.FileOutputStream;
 public class Persistencia 
 {
     private static final String fileName = "persistencia.json";
-    private static FileOutputStream fileOut;
-    FileInputStream fileIn;
+    private FileOutputStream fileOut;
+    private FileInputStream fileIn;
     private static Persistencia _instance;
     JsonWriter writer;
     JsonReader reader;
@@ -27,11 +28,13 @@ public class Persistencia
     {
         try
         {
-            fileOut = new FileOutputStream(fileName);
-            writer = new JsonWriter(fileOut);
+            
+            
             
             fileIn = new FileInputStream(fileName);
-            reader = new JsonReader(fileIn);
+            
+            reader = new JsonReader(fileIn);    
+            System.out.println("inicio");
         }
         catch(Exception ex)
         {
@@ -50,14 +53,24 @@ public class Persistencia
     
     public void guardarObjecto(Object pObjeto)
     {
+        try
+        {
+            fileOut = new FileOutputStream(fileName);
+        }
+        catch(FileNotFoundException ex){}
         writer = new JsonWriter(fileOut);
         writer.write(pObjeto);
+        writer.close();
     }
     
     public <T> T restaurarObjecto(Class<? extends T> pTipo)
     {
         
-        return (T)reader.readObject();
+        
+        T res = (T)reader.readObject();
+        System.out.println("---------------------------------");
+        System.out.println(res);
+        return res;
     }
     
 }

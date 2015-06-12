@@ -7,10 +7,10 @@ package GUI;
 
 import Modelo.Restaurante;
 import Modelo.Usuarios.Administrador;
+import Modelo.Usuarios.Cajero;
 import Modelo.Usuarios.Usuario;
 import Persistencia.Persistencia;
 import com.cedarsoftware.util.io.JsonIoException;
-import java.util.Arrays;
 import javax.swing.JOptionPane;
 
 /**
@@ -20,7 +20,7 @@ import javax.swing.JOptionPane;
 public class Login extends javax.swing.JFrame {
 
     private Restaurante restaurante;
-    private final Persistencia persistencia = Persistencia.getInstance();
+    private static final Persistencia persistencia = Persistencia.getInstance();
     
     /**
      * Creates new form Login
@@ -30,12 +30,27 @@ public class Login extends javax.swing.JFrame {
         
         try 
         {
+            //restaurante = new Restaurante();
+            //persistencia.guardarObjecto(restaurante);
             restaurante = persistencia.restaurarObjecto(Restaurante.class);
         }
         catch(JsonIoException ex)
         {
             restaurante = new Restaurante();
+            System.out.println("errorsh");
+            System.out.println(ex.getLocalizedMessage());
         }
+        finally
+        {
+            restaurante.refreshUsuarios();
+        }
+    }
+    
+    private void cleanForm()
+    {
+        tf_Usuario.setText("");
+        tf_Password.setText("");
+        
     }
     
     
@@ -57,6 +72,11 @@ public class Login extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("AdRes [Login]");
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         jLabel1.setText("Usuario");
 
@@ -124,7 +144,12 @@ public class Login extends javax.swing.JFrame {
                     AdministracionRestaurante form = new AdministracionRestaurante((Administrador) usuario);
                     form.setVisible(true);
                 }
-                
+                else
+                {
+                    FacturacionGUI form = new FacturacionGUI((Cajero) usuario);
+                    form.setVisible(true);
+                }
+                cleanForm();
             }
             else
             {
@@ -137,6 +162,11 @@ public class Login extends javax.swing.JFrame {
         }
         
     }//GEN-LAST:event_btn_loginActionPerformed
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        persistencia.guardarObjecto(restaurante);
+        System.out.println("guardó");
+    }//GEN-LAST:event_formWindowClosing
 
     /**
      * @param args the command line arguments

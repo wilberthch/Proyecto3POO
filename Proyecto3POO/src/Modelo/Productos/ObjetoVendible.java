@@ -5,6 +5,8 @@
  */
 package Modelo.Productos;
 
+import Modelo.Restaurante;
+
 /**
  *
  * @author will
@@ -14,6 +16,17 @@ public class ObjetoVendible implements Comparable<ObjetoVendible> {
     protected String nombre;
     protected double precio;
     protected double descuento;
+    protected String rutaImagen;
+    
+    public static final String IMAGES_PATH =  "ProductoImagenes/";
+    public static final String IMAGEN_DEFAULT =  IMAGES_PATH + "default.png";
+
+    
+    
+    public ObjetoVendible()
+    {
+        rutaImagen = IMAGEN_DEFAULT;
+    }
 
     /**
      * @return the nombre
@@ -51,6 +64,7 @@ public class ObjetoVendible implements Comparable<ObjetoVendible> {
     public double getDescuento() {
         return descuento;
     }
+    
 
     /**
      * @param descuento the descuento to set
@@ -58,12 +72,31 @@ public class ObjetoVendible implements Comparable<ObjetoVendible> {
     public void setDescuento(double descuento) {
         this.descuento = descuento;
     }
+    
+    /**
+     * @return the rutaImagen
+     */
+    public String getRutaImagen() {
+        return rutaImagen;
+    }
+
+    /**
+     * @param rutaImagen the rutaImagen to set
+     */
+    public void setRutaImagen(String rutaImagen) {
+        this.rutaImagen = rutaImagen;
+    }
 
     @Override
     public int compareTo(ObjetoVendible o) {
         
         return nombre.compareTo(o.getNombre());
         
+    }
+    
+    @Override
+    public String toString() {
+        return "ObjetoVendible{" + "nombre=" + nombre + ", precio=" + precio + ", descuento=" + descuento + '}';
     }
     
 }

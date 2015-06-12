@@ -92,6 +92,7 @@ public class Administrador extends Usuario
             else
             {
                 nuevoUsuario = new Cajero((iFacturador) restaurante);
+                System.out.println("hoooolissss");
             }
             nuevoUsuario.setCedula(cedula);
             nuevoUsuario.setFechaNacimiento(fechaNacimiento);
@@ -233,6 +234,11 @@ public class Administrador extends Usuario
      */
     public void setRestaurante(Restaurante restaurante) {
         this.restaurante = restaurante;
+    }
+
+    @Override
+    public void actualizarRestaurante(Restaurante pRestaurante) {
+        restaurante = pRestaurante;
     }
 
 
