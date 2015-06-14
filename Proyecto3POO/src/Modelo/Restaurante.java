@@ -89,6 +89,7 @@ public class Restaurante implements iFacturador
     
     public void agregarUsuario(Usuario pUsuario)
     {
+        pUsuario.actualizarRestaurante(this);
         usuarios.add(pUsuario);
     }
     

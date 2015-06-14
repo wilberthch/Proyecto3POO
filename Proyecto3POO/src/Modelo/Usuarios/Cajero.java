@@ -25,6 +25,7 @@ public class Cajero extends Usuario
     public Cajero(iFacturador pRestaurante)
     {
         restaurante = pRestaurante;
+        System.out.println(restaurante);
     }
     public Cajero()
     {
