@@ -207,7 +207,7 @@ public class Administrador extends Usuario
     
     public LinkedList<ProductoVendido> getReporteProductos()
     {
-        LinkedList<ProductoVendido> reporte = new LinkedList<ProductoVendido>();
+        LinkedList<ProductoVendido> reporte = new LinkedList<>();
         LinkedList<Factura> facturas = restaurante.getAllFacturas();
         for(int i = 0;i<facturas.size();i++){
             LinkedList<ObjetoVendible> items = facturas.get(i).getItems();
@@ -237,7 +237,7 @@ public class Administrador extends Usuario
     
     public LinkedList<CajeroVenta> getReporteCajero()
     {
-        LinkedList<CajeroVenta> reporte = new LinkedList<CajeroVenta>();
+        LinkedList<CajeroVenta> reporte = new LinkedList<>();
         LinkedList<Factura> facturas = restaurante.getAllFacturas();
         for (int y=0;y<facturas.size();y++){
             System.out.println(facturas.get(y).getCajero().getNombre());
@@ -273,6 +273,7 @@ public class Administrador extends Usuario
     {
         double descuento;
         String nombre;
+        String rutaImagen;
         LinkedList<Producto> productos;
 
         try
@@ -280,6 +281,7 @@ public class Administrador extends Usuario
             nombre = pCombo.getNombre();
             descuento = pCombo.getDescuento();
             productos = pCombo.getProductos();
+            rutaImagen = pCombo.getRutaImagen();
         }
         catch(NullPointerException ex)
         {
@@ -291,12 +293,14 @@ public class Administrador extends Usuario
             Combo combo = restaurante.getComboPorNombre(nombre);
             combo.setDescuento(descuento);
             combo.setProductos(productos);
+            combo.setRutaImagen(rutaImagen);
         }
         catch(NullPointerException ex)
         {
             Combo nuevoCombo = new Combo();
             nuevoCombo.setDescuento(descuento);
             nuevoCombo.setProductos(productos);
+            nuevoCombo.setRutaImagen(rutaImagen);
             restaurante.agregarCombo(pCombo);
 
 

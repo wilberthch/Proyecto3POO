@@ -5,6 +5,7 @@
  */
 package GUI;
 
+import GUI.Tools.FileTools;
 import GUI.Tools.NonEditableTableModel;
 import GUI.Tools.ImageTools;
 import Modelo.Productos.ObjetoVendible;
@@ -1141,7 +1142,10 @@ public class AdministracionRestaurante extends javax.swing.JFrame {
         {
             File file = fileChooser.getSelectedFile();
             Path filePath = Paths.get(file.getPath());
-            Path newImagePath = Paths.get(ObjetoVendible.IMAGES_PATH + file.getName());
+            
+            String randomName = FileTools.getRandomFileName(file.getName());
+            System.out.println(randomName);
+            Path newImagePath = Paths.get(ObjetoVendible.IMAGES_PATH + randomName);
             rutaImagenCombo = newImagePath.toString();
             System.out.println(filePath);
 
@@ -1218,6 +1222,12 @@ public class AdministracionRestaurante extends javax.swing.JFrame {
         String descuentoComboString = Double.toString(combo.getDescuento());
         tf_DescuentoCombo.setText(descuentoComboString);
         comboActual.setProductos(combo.getProductos());
+        File file = new File(combo.getRutaImagen());
+        try{
+            ImageTools.cargarImagenALabel(lbl_ComboImagen, file);
+        }catch (Exception x){
+
+        }
         refreshTblProductosCombo();
     }//GEN-LAST:event_tbl_CombosMouseClicked
 
@@ -1284,8 +1294,11 @@ public class AdministracionRestaurante extends javax.swing.JFrame {
         if(opcion == JFileChooser.APPROVE_OPTION)
         {
             File file = fileChooser.getSelectedFile();
+            
+            String randomName = FileTools.getRandomFileName(file.getName());
+            
             Path filePath = Paths.get(file.getPath());
-            Path newImagePath = Paths.get(ObjetoVendible.IMAGES_PATH + file.getName());
+            Path newImagePath = Paths.get(ObjetoVendible.IMAGES_PATH + randomName);
             rutaImagenProducto = newImagePath.toString();
             System.out.println(filePath);
 
