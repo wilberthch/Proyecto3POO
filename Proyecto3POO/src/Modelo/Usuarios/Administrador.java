@@ -5,11 +5,13 @@
  */
 package Modelo.Usuarios;
 
+import Modelo.Facturacion.Factura;
 import Modelo.Productos.Combo;
 import Modelo.Productos.Producto;
 import Modelo.Productos.ProductoAgrandable;
 import Modelo.Restaurante;
 import Modelo.Facturacion.iFacturador;
+import Modelo.Productos.ObjetoVendible;
 import java.time.LocalDate;
 import java.util.LinkedList;
 
@@ -120,6 +122,11 @@ public class Administrador extends Usuario
     {
         return restaurante.getAllProductos();
     }
+    
+    public LinkedList<Factura> getAllFacturas()
+    {
+        return restaurante.getAllFacturas();
+    }
 
     public Producto getProductoPorNombre(String pNombreProducto) throws NullPointerException
     {
@@ -181,6 +188,80 @@ public class Administrador extends Usuario
     public LinkedList<Combo> getAllCombos()
     {
         return restaurante.getAllCombos();
+    }
+    
+    public boolean isWithin(LinkedList<ProductoVendido> pReporte,String pNombre){
+        for (int u=0;u<pReporte.size();u++){
+            if (pReporte.get(u).getNombreProducto().equals(pNombre))
+                return true;
+        }
+        return false;
+    }
+    public boolean isWithin2(LinkedList<CajeroVenta> pReporte,String pNombre){
+        for (int u=0;u<pReporte.size();u++){
+            if (pReporte.get(u).getNombreCajero().equals(pNombre))
+                return true;
+        }
+        return false;
+    }
+    
+    public LinkedList<ProductoVendido> getReporteProductos()
+    {
+        LinkedList<ProductoVendido> reporte = new LinkedList<ProductoVendido>();
+        LinkedList<Factura> facturas = restaurante.getAllFacturas();
+        for(int i = 0;i<facturas.size();i++){
+            LinkedList<ObjetoVendible> items = facturas.get(i).getItems();
+            for(int p=0;p<items.size();p++){
+                ObjetoVendible Productotemp=items.get(p);
+                String nombre = Productotemp.getNombre();
+                if(isWithin(reporte,nombre))
+                    break;
+                ProductoVendido Reportar = new ProductoVendido(nombre);
+                reporte.add(Reportar);
+            }
+        }
+        
+        for(int i = 0;i<facturas.size();i++){
+            LinkedList<ObjetoVendible> items = facturas.get(i).getItems();
+            for(int p=0;p<items.size();p++){
+                ObjetoVendible Productotemp=items.get(p);
+                String nombre = Productotemp.getNombre();
+                for (int u=0;u<reporte.size();u++){
+                    if (reporte.get(u).getNombreProducto().equals(nombre))
+                        reporte.get(u).increaceAmount();
+                }
+            }
+        }
+        return reporte;
+    }
+    
+    public LinkedList<CajeroVenta> getReporteCajero()
+    {
+        LinkedList<CajeroVenta> reporte = new LinkedList<CajeroVenta>();
+        LinkedList<Factura> facturas = restaurante.getAllFacturas();
+        for (int y=0;y<facturas.size();y++){
+            System.out.println(facturas.get(y).getCajero().getNombre());
+        }
+        for(int i = 0;i<facturas.size();i++){
+            Cajero caj = facturas.get(i).getCajero();
+            String nombre = caj.getNombre();
+            if(isWithin2(reporte,nombre))
+                continue;
+            CajeroVenta Reportar = new CajeroVenta(nombre);
+            reporte.add(Reportar);
+        }
+        
+        for(int i = 0;i<facturas.size();i++){
+            Cajero caj = facturas.get(i).getCajero();
+            String nombre = caj.getNombre();
+            for(int o=0;o<reporte.size();o++){
+                if (reporte.get(o).getNombreCajero()==nombre){
+                    reporte.get(o).increaceAmount();
+                    break;
+                }
+            }
+        }
+        return reporte;
     }
 
     public Combo getComboPorNombre(String pNombreCombo) throws NullPointerException

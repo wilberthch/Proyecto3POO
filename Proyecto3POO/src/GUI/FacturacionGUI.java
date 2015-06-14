@@ -68,6 +68,7 @@ public class FacturacionGUI extends javax.swing.JFrame implements iStalker {
                 if(!objectosSeleccionados.contains(contenedor))
                 {
                     contenedor.deseleccionar();
+                    
                 }
                 
             }
@@ -87,6 +88,7 @@ public class FacturacionGUI extends javax.swing.JFrame implements iStalker {
                 if(!objectosSeleccionados.contains(contenedor))
                 {
                     contenedor.deseleccionar();
+                   
                 }
                 
             }
@@ -125,7 +127,7 @@ public class FacturacionGUI extends javax.swing.JFrame implements iStalker {
             ContenedorObjetoVendible contenedor = 
                     new ContenedorObjetoVendible((ObjetoVendible)producto, (iStalker)this);
             
-            System.out.println(view.getSize());
+         
             
             view.add(contenedor, constraints);
             constraints.gridx = cuentaX;
@@ -176,7 +178,7 @@ public class FacturacionGUI extends javax.swing.JFrame implements iStalker {
             ContenedorObjetoVendible contenedor = 
                     new ContenedorObjetoVendible((ObjetoVendible)combo, (iStalker)this);
             
-            System.out.println(view.getSize());
+         
             
             view.add(contenedor, constraints);
             constraints.gridx = cuentaX;
@@ -227,7 +229,7 @@ public class FacturacionGUI extends javax.swing.JFrame implements iStalker {
             ContenedorObjetoVendibleSeleccionado contenedor = 
                     new ContenedorObjetoVendibleSeleccionado(objetoVendible, (iStalker)this);
             
-            System.out.println(view.getSize());
+            
             
             view.add(contenedor, constraints);
             constraints.gridx = cuentaX;
@@ -248,33 +250,47 @@ public class FacturacionGUI extends javax.swing.JFrame implements iStalker {
         this.pack();
     }
     
+    public void pagar(){
+        double totall=0;
+        for(ObjetoVendible objetoVendible : objectosSeleccionados){
+                totall+=objetoVendible.getPrecio();}
+        int impuesto = (int) (totall*0.1);
+        totall+=impuesto;
+        MontoTempo.setText(Double.toString(totall));
+    }
+    
     @Override
     public void actualizar(iSujeto pSujeto, boolean pRemover)
-    {
+    {   
+        
         ContenedorObjetoVendible contenedorObjetoVendible = (ContenedorObjetoVendible)pSujeto;
         if(pRemover)
         {
             objectosSeleccionados.remove(contenedorObjetoVendible.getObjetoVendible());
             contenedoresSeleccionados.remove(contenedorObjetoVendible);
+            pagar();
             if(pSujeto instanceof ContenedorObjetoVendibleSeleccionado)
             {
+                
                 refreshProductosTab();
                 refreshCombosTab();
+                
             }
         }
         else
         {
             objectosSeleccionados.add(contenedorObjetoVendible.getObjetoVendible());
             contenedoresSeleccionados.add(contenedorObjetoVendible);
+            pagar();
         }
         
         
         
         initOrdenTab();
-        for(ObjetoVendible objetoVendible : objectosSeleccionados)
+        /*for(ObjetoVendible objetoVendible : objectosSeleccionados)
         {
             System.out.println(objetoVendible);
-        }
+        }*/
     }
     
     private boolean esFormValido()
@@ -301,6 +317,10 @@ public class FacturacionGUI extends javax.swing.JFrame implements iStalker {
         scp_Combos = new javax.swing.JScrollPane();
         scp_Orden = new javax.swing.JScrollPane();
         btnFacturar = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+        Monto = new javax.swing.JTextField();
+        jLabel2 = new javax.swing.JLabel();
+        MontoTempo = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Facturación");
@@ -324,12 +344,26 @@ public class FacturacionGUI extends javax.swing.JFrame implements iStalker {
             }
         });
 
+        jLabel1.setText("Efectivo Colones");
+
+        jLabel2.setText("Total");
+
+        MontoTempo.setText("0");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(652, Short.MAX_VALUE)
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel1)
+                    .addComponent(jLabel2))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(MontoTempo)
+                    .addComponent(Monto, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 365, Short.MAX_VALUE)
                 .addComponent(btnFacturar, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
             .addComponent(jTabbedPane1)
@@ -339,30 +373,64 @@ public class FacturacionGUI extends javax.swing.JFrame implements iStalker {
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 466, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnFacturar, javax.swing.GroupLayout.DEFAULT_SIZE, 42, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnFacturar, javax.swing.GroupLayout.DEFAULT_SIZE, 71, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel1)
+                            .addComponent(Monto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel2)
+                            .addComponent(MontoTempo))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    public boolean isDigit(){
+        try{
+            Double efectivo = Double.valueOf(Monto.getText());
+            }
+            catch(NumberFormatException e){
+                JOptionPane.showMessageDialog(this, "Monto en Efectivo no es valido");
+                Monto.setText("");
+                return false;
+            }
+        return true;
+    }
     private void btnFacturarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFacturarActionPerformed
         if(esFormValido())
         {
+            if (isDigit()){
+            
+            Double efectivo = Double.valueOf(Monto.getText());
             LinkedList<ObjetoVendible> items = new LinkedList<>(objectosSeleccionados);
             Factura factura = new Factura(cajero, items);
+            double total=0;
+            for(ObjetoVendible objetoVendible : items){
+                total+=objetoVendible.getPrecio();}
+            if (efectivo-(total+(total*0.1))>=0){
             factura.setFacturaPagada();
             cajero.guardarFactura(factura);
-            JOptionPane.showMessageDialog(this, "Factura");
-            //agregar aquí el "imprimir" factura
+            MontoTempo.setText("0");
+            FacturaFinal facturaCreada = new FacturaFinal(factura,cajero.getNombre(),efectivo);
+            facturaCreada.setVisible(true);
+            
+            
             objectosSeleccionados.clear();
             initProductosTab();
             initCombosTab();
-            initOrdenTab();
+            initOrdenTab();}else{
+                JOptionPane.showMessageDialog(this, "Monto insuficiente");
+            }}
         }
         else
         {
             JOptionPane.showMessageDialog(this, "No hay items en la orden");
+            MontoTempo.setText("0");
         }
     }//GEN-LAST:event_btnFacturarActionPerformed
 
@@ -402,7 +470,11 @@ public class FacturacionGUI extends javax.swing.JFrame implements iStalker {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTextField Monto;
+    private javax.swing.JLabel MontoTempo;
     private javax.swing.JButton btnFacturar;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JScrollPane scp_Combos;
     private javax.swing.JScrollPane scp_Orden;

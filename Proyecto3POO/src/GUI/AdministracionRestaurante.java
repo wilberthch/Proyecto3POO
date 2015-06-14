@@ -14,6 +14,8 @@ import Modelo.Productos.ProductoAgrandable;
 import Modelo.Restaurante;
 import Modelo.Usuarios.Administrador;
 import Modelo.Usuarios.Cajero;
+import Modelo.Usuarios.CajeroVenta;
+import Modelo.Usuarios.ProductoVendido;
 import Modelo.Usuarios.Usuario;
 import java.io.File;
 import java.io.IOException;
@@ -58,6 +60,12 @@ public class AdministracionRestaurante extends javax.swing.JFrame {
     private static final NonEditableTableModel productosComboTableModel = new NonEditableTableModel();
     private static final String[] productosComboHeaders = {"Producto", "Precio", "Cantidad para el Combo"};
     private Combo comboActual;
+    
+    private static final NonEditableTableModel pReporteTableModel = new NonEditableTableModel();
+    private static final String[] pReporteHeaders = {"Productos", "Cantidad"};
+    
+    private static final NonEditableTableModel pReporteCTableModel = new NonEditableTableModel();
+    private static final String[] pReporteCHeaders = {"Cajero", "Cantidad de Ventas"};
 
     private static final DateTimeFormatter dateFormater = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     private JFileChooser fileChooser = new JFileChooser();
@@ -105,6 +113,8 @@ public class AdministracionRestaurante extends javax.swing.JFrame {
         }
 
     }
+    
+   
     
     private void refreshTblUsuarios()
     {
@@ -157,6 +167,37 @@ public class AdministracionRestaurante extends javax.swing.JFrame {
         
     }
     
+    private void refreshTblReporte(LinkedList<ProductoVendido> pReporte)
+    {
+         
+        String[][] reporteDatos = new String[pReporte.size()][2];
+        for(int index = 0; index < pReporte.size(); index++)
+        {
+            
+            reporteDatos[index][0]= pReporte.get(index).getNombreProducto();
+            reporteDatos[index][1] = String.valueOf(pReporte.get(index).getCantidadProducto());
+        }
+        
+        pReporteTableModel.setDataVector(reporteDatos, pReporteHeaders);
+        reporte.setModel(pReporteTableModel);
+
+    }
+    
+    private void refreshTblReporteVenta(LinkedList<CajeroVenta> pReporte)
+    {
+        String[][] reporteDatos = new String[pReporte.size()][2];
+        for(int index = 0; index < pReporte.size(); index++)
+        {
+            
+            reporteDatos[index][0]= pReporte.get(index).getNombreCajero();
+            reporteDatos[index][1] = String.valueOf(pReporte.get(index).getCantidadVenta());
+        }
+        
+        pReporteCTableModel.setDataVector(reporteDatos, pReporteCHeaders);
+        reporteCajero.setModel(pReporteCTableModel);
+
+    }
+    
     private void refreshTblProductosCombo()
     {
         LinkedList<Producto> productosCombo = comboActual.getProductos();
@@ -178,6 +219,8 @@ public class AdministracionRestaurante extends javax.swing.JFrame {
         lbl_PrecioTotalCombo.setText(precioTotalCombo);
         
     }
+    
+    
 
     private boolean esFormUsuariosValido()
     {
@@ -215,6 +258,7 @@ public class AdministracionRestaurante extends javax.swing.JFrame {
         
         return res;
     }
+    
 
     private void limpiarFormUsuarios()
     {
@@ -334,6 +378,17 @@ public class AdministracionRestaurante extends javax.swing.JFrame {
         rb_Cajero = new javax.swing.JRadioButton();
         jLabel8 = new javax.swing.JLabel();
         btn_Borrar = new javax.swing.JButton();
+        jTabbedPane2 = new javax.swing.JTabbedPane();
+        jPanel5 = new javax.swing.JPanel();
+        jScrollPane5 = new javax.swing.JScrollPane();
+        reporte = new javax.swing.JTable();
+        VerReporte = new javax.swing.JButton();
+        salirReporte = new javax.swing.JButton();
+        jPanel6 = new javax.swing.JPanel();
+        jScrollPane6 = new javax.swing.JScrollPane();
+        reporteCajero = new javax.swing.JTable();
+        VerReporteCajero = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("AdRes [Administración]");
@@ -471,7 +526,7 @@ public class AdministracionRestaurante extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btn_SalirProducto)
                         .addGap(6, 6, 6)))
-                .addGap(0, 105, Short.MAX_VALUE))
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -647,7 +702,7 @@ public class AdministracionRestaurante extends javax.swing.JFrame {
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 495, Short.MAX_VALUE)
+            .addComponent(jScrollPane3)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
                 .addGap(6, 6, 6)
                 .addComponent(jLabel13)
@@ -863,6 +918,119 @@ public class AdministracionRestaurante extends javax.swing.JFrame {
 
         jTabbedPane1.addTab("Usuarios", jPanel1);
 
+        reporte.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null},
+                {null, null},
+                {null, null},
+                {null, null}
+            },
+            new String [] {
+                "Productos", "Cantidad"
+            }
+        ));
+        jScrollPane5.setViewportView(reporte);
+
+        VerReporte.setText("Ver reporte");
+        VerReporte.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                VerReporteActionPerformed(evt);
+            }
+        });
+
+        salirReporte.setText("Salir");
+        salirReporte.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                salirReporteActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
+        jPanel5.setLayout(jPanel5Layout);
+        jPanel5Layout.setHorizontalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(VerReporte)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(salirReporte)
+                .addGap(56, 56, 56))
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 615, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        jPanel5Layout.setVerticalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 397, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(VerReporte)
+                    .addComponent(salirReporte))
+                .addGap(0, 0, Short.MAX_VALUE))
+        );
+
+        jTabbedPane2.addTab("Productos", jPanel5);
+
+        reporteCajero.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null},
+                {null, null},
+                {null, null},
+                {null, null}
+            },
+            new String [] {
+                "Cajero", "Cantidad de Ventas"
+            }
+        ));
+        jScrollPane6.setViewportView(reporteCajero);
+
+        VerReporteCajero.setText("Ver reporte");
+        VerReporteCajero.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                VerReporteCajeroActionPerformed(evt);
+            }
+        });
+
+        jButton2.setText("Salir");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
+        jPanel6.setLayout(jPanel6Layout);
+        jPanel6Layout.setHorizontalGroup(
+            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel6Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane6, javax.swing.GroupLayout.DEFAULT_SIZE, 615, Short.MAX_VALUE)
+                .addContainerGap())
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(VerReporteCajero)
+                .addGap(18, 18, 18)
+                .addComponent(jButton2)
+                .addGap(69, 69, 69))
+        );
+        jPanel6Layout.setVerticalGroup(
+            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel6Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 395, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(VerReporteCajero)
+                    .addComponent(jButton2))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        jTabbedPane2.addTab("Ventas", jPanel6);
+
+        jTabbedPane1.addTab("Reportes", jTabbedPane2);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -877,12 +1045,29 @@ public class AdministracionRestaurante extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btn_BorrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_BorrarActionPerformed
+        String nombreUsuario = tf_UserNameUsuario.getText();
+        if(!nombreUsuario.isEmpty())
+        {
+            administrador.removerUsuario(nombreUsuario);
+        }
+        else
+        {
+            JOptionPane.showMessageDialog(this, "No hay usuario seleccionado");
+        }
+        refreshTblUsuarios();
+        limpiarFormUsuarios();
+    }//GEN-LAST:event_btn_BorrarActionPerformed
+
+    private void btn_SalirUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_SalirUsuarioActionPerformed
+        this.dispose();
+    }//GEN-LAST:event_btn_SalirUsuarioActionPerformed
+
     private void btn_CancelarUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_CancelarUsuarioActionPerformed
         limpiarFormUsuarios();
     }//GEN-LAST:event_btn_CancelarUsuarioActionPerformed
 
     private void btn_GuardarUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_GuardarUsuarioActionPerformed
-
 
         if(esFormUsuariosValido())
         {
@@ -916,14 +1101,10 @@ public class AdministracionRestaurante extends javax.swing.JFrame {
             usuario.setNombreUsuario(nombreUsuario);
             usuario.setPassword(password);
 
-
             administrador.guardarUsuario(usuario);
 
             refreshTblUsuarios();
             limpiarFormUsuarios();
-
-
-
 
         }
         else
@@ -931,26 +1112,7 @@ public class AdministracionRestaurante extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Todos los campos son requeridos");
         }
 
-
     }//GEN-LAST:event_btn_GuardarUsuarioActionPerformed
-
-    private void btn_SalirUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_SalirUsuarioActionPerformed
-        this.dispose();
-    }//GEN-LAST:event_btn_SalirUsuarioActionPerformed
-
-    private void btn_BorrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_BorrarActionPerformed
-        String nombreUsuario = tf_UserNameUsuario.getText();
-        if(!nombreUsuario.isEmpty())
-        {
-            administrador.removerUsuario(nombreUsuario);
-        }
-        else
-        {
-            JOptionPane.showMessageDialog(this, "No hay usuario seleccionado");
-        }
-        refreshTblUsuarios();
-        limpiarFormUsuarios();
-    }//GEN-LAST:event_btn_BorrarActionPerformed
 
     private void tbl_UsuariosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbl_UsuariosMouseClicked
         int indexRow = tbl_Usuarios.getSelectedRow();
@@ -970,10 +1132,9 @@ public class AdministracionRestaurante extends javax.swing.JFrame {
         boolean esAdmin = usuario instanceof Administrador;
         rb_Administrador.setSelected(esAdmin);
         rb_Cajero.setSelected(!esAdmin);
-
     }//GEN-LAST:event_tbl_UsuariosMouseClicked
 
-    private void btn_CargarImagenProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_CargarImagenProductoActionPerformed
+    private void btn_CargarImagenComboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_CargarImagenComboActionPerformed
         fileChooser.setFileFilter(imageFilter);
         int opcion = fileChooser.showOpenDialog(this);
         if(opcion == JFileChooser.APPROVE_OPTION)
@@ -981,18 +1142,111 @@ public class AdministracionRestaurante extends javax.swing.JFrame {
             File file = fileChooser.getSelectedFile();
             Path filePath = Paths.get(file.getPath());
             Path newImagePath = Paths.get(ObjetoVendible.IMAGES_PATH + file.getName());
-            rutaImagenProducto = newImagePath.toString();
+            rutaImagenCombo = newImagePath.toString();
             System.out.println(filePath);
-
 
             try {
                 Files.copy(filePath, newImagePath, REPLACE_EXISTING);
-                ImageTools.cargarImagenALabel(lbl_ProductoImagen, file);
+                ImageTools.cargarImagenALabel(lbl_ComboImagen, file);
             } catch (IOException ex) {
                 Logger.getLogger(AdministracionRestaurante.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-    }//GEN-LAST:event_btn_CargarImagenProductoActionPerformed
+    }//GEN-LAST:event_btn_CargarImagenComboActionPerformed
+
+    private void btn_salirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_salirActionPerformed
+        this.dispose();
+    }//GEN-LAST:event_btn_salirActionPerformed
+
+    private void btn_CancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_CancelarActionPerformed
+        limpiarFormCombos();
+    }//GEN-LAST:event_btn_CancelarActionPerformed
+
+    private void btn_BorrarComboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_BorrarComboActionPerformed
+        String nombreCombo = tf_NombreCombo.getText();
+        if(!nombreCombo.isEmpty())
+        {
+            administrador.removerCombo(nombreCombo);
+            refreshTblCombos();
+            limpiarFormCombos();
+        }
+        else
+        {
+            JOptionPane.showMessageDialog(this, "No hay combo seleccionado");
+        }
+    }//GEN-LAST:event_btn_BorrarComboActionPerformed
+
+    private void btn_GuardarComboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_GuardarComboActionPerformed
+        if(esFormCombosValido())
+        {
+            String nombreCombo = tf_NombreCombo.getText();
+            Double descuentoCombo = Double.parseDouble(tf_DescuentoCombo.getText());
+
+            comboActual.setNombre(nombreCombo);
+            comboActual.setDescuento(descuentoCombo);
+            comboActual.setRutaImagen(rutaImagenCombo);
+            administrador.guardarCombo(comboActual);
+
+            refreshTblCombos();
+            limpiarFormCombos();
+            
+            
+
+        }
+        else
+        {
+            JOptionPane.showMessageDialog(this, "No se puede guardar combo sin producto o con algún campo vacío");
+        }
+    }//GEN-LAST:event_btn_GuardarComboActionPerformed
+
+    private void btn_ModificarProductosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_ModificarProductosActionPerformed
+        ListaProductosGUI listaProductos = new ListaProductosGUI(this, true,
+            administrador, comboActual.getProductos());
+        listaProductos.setVisible(true);
+        LinkedList<Producto> productosSeleccionados = listaProductos.getProductosSeleccionados();
+        comboActual.setProductos(productosSeleccionados);
+
+        refreshTblProductosCombo();
+    }//GEN-LAST:event_btn_ModificarProductosActionPerformed
+
+    private void tbl_CombosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbl_CombosMouseClicked
+        int indexRow = tbl_Combos.getSelectedRow();
+
+        String nombreCombo = (String)tbl_Combos.getValueAt(indexRow, 0);
+        Combo combo = administrador.getComboPorNombre(nombreCombo);
+        tf_NombreCombo.setText(combo.getNombre());
+        String descuentoComboString = Double.toString(combo.getDescuento());
+        tf_DescuentoCombo.setText(descuentoComboString);
+        comboActual.setProductos(combo.getProductos());
+        refreshTblProductosCombo();
+    }//GEN-LAST:event_tbl_CombosMouseClicked
+
+    private void ckb_ProductoAgrandableActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ckb_ProductoAgrandableActionPerformed
+        boolean chekeado = ckb_ProductoAgrandable.isSelected();
+        pnl_ContenedorProductoAgrandable.setVisible(chekeado);
+    }//GEN-LAST:event_ckb_ProductoAgrandableActionPerformed
+
+    private void btn_SalirProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_SalirProductoActionPerformed
+        this.dispose();
+    }//GEN-LAST:event_btn_SalirProductoActionPerformed
+
+    private void btn_CancelarProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_CancelarProductoActionPerformed
+        limpiarFormProducto();
+    }//GEN-LAST:event_btn_CancelarProductoActionPerformed
+
+    private void btn_BorrarProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_BorrarProductoActionPerformed
+        String nombreProducto = tf_NombreProducto.getText();
+        if(!nombreProducto.isEmpty())
+        {
+            administrador.removerProducto(nombreProducto);
+        }
+        else
+        {
+            JOptionPane.showMessageDialog(this, "No hay producto seleccionado");
+        }
+        refreshTblProductos();
+        limpiarFormProducto();
+    }//GEN-LAST:event_btn_BorrarProductoActionPerformed
 
     private void btn_GuardarProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_GuardarProductoActionPerformed
         if(esFormProductosValido())
@@ -1024,78 +1278,25 @@ public class AdministracionRestaurante extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btn_GuardarProductoActionPerformed
 
-    private void ckb_ProductoAgrandableActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ckb_ProductoAgrandableActionPerformed
-        boolean chekeado = ckb_ProductoAgrandable.isSelected();
-        pnl_ContenedorProductoAgrandable.setVisible(chekeado);
-    }//GEN-LAST:event_ckb_ProductoAgrandableActionPerformed
-
-
-    private void btn_ModificarProductosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_ModificarProductosActionPerformed
-        ListaProductosGUI listaProductos = new ListaProductosGUI(this, true,
-                administrador, comboActual.getProductos());
-        listaProductos.setVisible(true);
-        LinkedList<Producto> productosSeleccionados = listaProductos.getProductosSeleccionados();
-        comboActual.setProductos(productosSeleccionados);
-        
-        refreshTblProductosCombo();
-    }//GEN-LAST:event_btn_ModificarProductosActionPerformed
-
-    private void btn_GuardarComboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_GuardarComboActionPerformed
-        if(esFormCombosValido())
+    private void btn_CargarImagenProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_CargarImagenProductoActionPerformed
+        fileChooser.setFileFilter(imageFilter);
+        int opcion = fileChooser.showOpenDialog(this);
+        if(opcion == JFileChooser.APPROVE_OPTION)
         {
-            String nombreCombo = tf_NombreCombo.getText();
-            Double descuentoCombo = Double.parseDouble(tf_DescuentoCombo.getText());
-            
-            
-            
-            comboActual.setNombre(nombreCombo);
-            comboActual.setDescuento(descuentoCombo);
-            comboActual.setRutaImagen(rutaImagenCombo);
-            administrador.guardarCombo(comboActual);
-            
-            refreshTblCombos();
-            limpiarFormCombos();
-            
-        }
-        else
-        {
-            JOptionPane.showMessageDialog(this, "No se puede guardar combo sin producto o con algún campo vacío");
-        }
-    }//GEN-LAST:event_btn_GuardarComboActionPerformed
+            File file = fileChooser.getSelectedFile();
+            Path filePath = Paths.get(file.getPath());
+            Path newImagePath = Paths.get(ObjetoVendible.IMAGES_PATH + file.getName());
+            rutaImagenProducto = newImagePath.toString();
+            System.out.println(filePath);
 
-    private void btn_BorrarComboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_BorrarComboActionPerformed
-        String nombreCombo = tf_NombreCombo.getText();
-        if(!nombreCombo.isEmpty())
-        {
-            administrador.removerCombo(nombreCombo);
-            refreshTblCombos();
-            limpiarFormCombos();
+            try {
+                Files.copy(filePath, newImagePath, REPLACE_EXISTING);
+                ImageTools.cargarImagenALabel(lbl_ProductoImagen, file);
+            } catch (IOException ex) {
+                Logger.getLogger(AdministracionRestaurante.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
-        else
-        {
-            JOptionPane.showMessageDialog(this, "No hay combo seleccionado");
-        }
-    }//GEN-LAST:event_btn_BorrarComboActionPerformed
-
-    private void tbl_CombosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbl_CombosMouseClicked
-        int indexRow = tbl_Combos.getSelectedRow();
-        
-        String nombreCombo = (String)tbl_Combos.getValueAt(indexRow, 0);
-        Combo combo = administrador.getComboPorNombre(nombreCombo);
-        tf_NombreCombo.setText(combo.getNombre());
-        String descuentoComboString = Double.toString(combo.getDescuento());
-        tf_DescuentoCombo.setText(descuentoComboString);
-        comboActual.setProductos(combo.getProductos());
-        refreshTblProductosCombo();
-    }//GEN-LAST:event_tbl_CombosMouseClicked
-
-    private void btn_CancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_CancelarActionPerformed
-        limpiarFormCombos();
-    }//GEN-LAST:event_btn_CancelarActionPerformed
-
-    private void btn_salirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_salirActionPerformed
-        this.dispose();
-    }//GEN-LAST:event_btn_salirActionPerformed
+    }//GEN-LAST:event_btn_CargarImagenProductoActionPerformed
 
     private void tbl_ProductosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbl_ProductosMouseClicked
         int indexRow = tbl_Productos.getSelectedRow();
@@ -1112,57 +1313,35 @@ public class AdministracionRestaurante extends javax.swing.JFrame {
         tf_NombreProducto.setText(producto.getNombre());
         tf_PrecioProducto.setText(Double.toString(producto.getPrecio()));
         tf_DescuentoProducto.setText(Double.toString(producto.getDescuento()));
-        
+
         File file = new File(producto.getRutaImagen());
         try{
-        ImageTools.cargarImagenALabel(lbl_ProductoImagen, file);
+            ImageTools.cargarImagenALabel(lbl_ProductoImagen, file);
         }catch (Exception x){
 
         }
     }//GEN-LAST:event_tbl_ProductosMouseClicked
 
-    private void btn_BorrarProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_BorrarProductoActionPerformed
-        String nombreProducto = tf_NombreProducto.getText();
-        if(!nombreProducto.isEmpty())
-        {
-            administrador.removerProducto(nombreProducto);
-        }
-        else
-        {
-            JOptionPane.showMessageDialog(this, "No hay producto seleccionado");
-        }
-        refreshTblProductos();
-        limpiarFormProducto();
-    }//GEN-LAST:event_btn_BorrarProductoActionPerformed
+    private void VerReporteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_VerReporteActionPerformed
 
-    private void btn_SalirProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_SalirProductoActionPerformed
+       refreshTblReporte(administrador.getReporteProductos());
+    }//GEN-LAST:event_VerReporteActionPerformed
+
+    private void salirReporteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_salirReporteActionPerformed
         this.dispose();
-    }//GEN-LAST:event_btn_SalirProductoActionPerformed
+    }//GEN-LAST:event_salirReporteActionPerformed
 
-    private void btn_CancelarProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_CancelarProductoActionPerformed
-        limpiarFormProducto();
-    }//GEN-LAST:event_btn_CancelarProductoActionPerformed
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        this.dispose();
+    }//GEN-LAST:event_jButton2ActionPerformed
 
-    private void btn_CargarImagenComboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_CargarImagenComboActionPerformed
-        fileChooser.setFileFilter(imageFilter);
-        int opcion = fileChooser.showOpenDialog(this);
-        if(opcion == JFileChooser.APPROVE_OPTION)
-        {
-            File file = fileChooser.getSelectedFile();
-            Path filePath = Paths.get(file.getPath());
-            Path newImagePath = Paths.get(ObjetoVendible.IMAGES_PATH + file.getName());
-            rutaImagenCombo = newImagePath.toString();
-            System.out.println(filePath);
+    private void VerReporteCajeroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_VerReporteCajeroActionPerformed
+        refreshTblReporteVenta(administrador.getReporteCajero());
+        /*for (int i=0;i<administrador.getReporteCajero().size();i++){
+            System.out.println(administrador.getReporteCajero().get(i).getNombreCajero());
+        }*/
+    }//GEN-LAST:event_VerReporteCajeroActionPerformed
 
-
-            try {
-                Files.copy(filePath, newImagePath, REPLACE_EXISTING);
-                ImageTools.cargarImagenALabel(lbl_ComboImagen, file);
-            } catch (IOException ex) {
-                Logger.getLogger(AdministracionRestaurante.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-    }//GEN-LAST:event_btn_CargarImagenComboActionPerformed
     /**
      * @param args the command line arguments
      */
@@ -1199,6 +1378,8 @@ public class AdministracionRestaurante extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton VerReporte;
+    private javax.swing.JButton VerReporteCajero;
     private javax.swing.ButtonGroup bgr_Usuarios;
     private javax.swing.JButton btn_Borrar;
     private javax.swing.JButton btn_BorrarCombo;
@@ -1217,6 +1398,7 @@ public class AdministracionRestaurante extends javax.swing.JFrame {
     private javax.swing.JButton btn_salir;
     private javax.swing.JComboBox cbx_Sexo;
     private javax.swing.JCheckBox ckb_ProductoAgrandable;
+    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -1236,17 +1418,25 @@ public class AdministracionRestaurante extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel5;
+    private javax.swing.JPanel jPanel6;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JScrollPane jScrollPane5;
+    private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JTabbedPane jTabbedPane2;
     private javax.swing.JLabel lbl_ComboImagen;
     private javax.swing.JLabel lbl_PrecioTotalCombo;
     private javax.swing.JLabel lbl_ProductoImagen;
     private javax.swing.JPanel pnl_ContenedorProductoAgrandable;
     private javax.swing.JRadioButton rb_Administrador;
     private javax.swing.JRadioButton rb_Cajero;
+    private javax.swing.JTable reporte;
+    private javax.swing.JTable reporteCajero;
+    private javax.swing.JButton salirReporte;
     private javax.swing.JSpinner spn_MaximoAgrandamiento;
     private javax.swing.JTable tbl_Combos;
     private javax.swing.JTable tbl_Productos;

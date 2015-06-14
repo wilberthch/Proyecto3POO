@@ -88,6 +88,9 @@ public class Factura
     {
         estado = EstadoFactura.PAGADA;
     }
+    public Cajero getCajero(){
+        return cajero;
+    }
 
     /**
      * @return the items
